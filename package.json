@@ -2,9 +2,11 @@
   "name": "marvinjs",
   "version": "0.1.0",
   "scripts": {
-    "dev": "nodemon src/server.js --exec babel-node",
-    "build": "next build",
-    "start": "NODE_ENV=production node src/server.js"
+    "dev": "nodemon src/",
+    "build": "npm run build:next",
+    "build:next": "next build src/dashboard",
+    "build:server": "babel src --out-dir dist",
+    "start": "NODE_ENV=production node src/"
   },
   "dependencies": {
     "@babel/node": "^7.2.2",
@@ -26,12 +28,16 @@
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.2.3",
+    "@babel/register": "^7.0.0",
     "nodemon": "^1.18.9"
   },
   "babel": {
     "presets": [
       "@babel/preset-env",
       "next/babel"
+    ],
+    "ignore": [
+      "src/dashboard/.next"
     ]
   },
   "nodemonConfig": {

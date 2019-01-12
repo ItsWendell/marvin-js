@@ -4,12 +4,22 @@ import express from 'express';
 import { rtm, routes as SlackRoutes } from './slack';
 import dashboard from './dashboard';
 import database, { models } from './database';
+import * as modules from './modules';
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 
 const handle = dashboard.getRequestHandler();
 
 const server = express();
+
+function loadModules() {
+  Object.keys(modules).forEach((key) => {
+    if (typeof modules[key].activate === "function") {
+      modules[key].activate();
+      console.log('[Modules] Activated module', key);
+    }
+  });
+}
 
 dashboard.prepare().then(() => {
   // Expose MongoDB to NextJS
@@ -35,7 +45,9 @@ dashboard.prepare().then(() => {
     database.connect()
       .then(() => {
         console.log('[Database] Connected to', database.host);
-        rtm.start();
+        rtm.start().then(() => {
+          loadModules();
+        });
       })
       .catch((error) => {
         console.log('[Database]', error.message);
