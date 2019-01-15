@@ -1,2 +1,4 @@
 export { default } from './database';
-export * from './models';
+import * as models from './models';
+
+export { models };
