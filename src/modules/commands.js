@@ -27,7 +27,7 @@ export const commands = yargs()
 export function activate() {
     rtm.on('message', ({ text, user, channel, ...message }) => {
         // Skip messages that are from a bot or my own user ID, or are for factoids.
-        if ((message.subtype && message.subtype === 'bot_message') ||
+        if (!text || (message.subtype && message.subtype === 'bot_message') ||
             (!message.subtype && user === rtm.activeUserId) ||
             text.startsWith('!')) {
             return;
