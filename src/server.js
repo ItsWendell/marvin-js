@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import raven from 'raven';
 import express from 'express';
 
 import { rtm, routes as SlackRoutes } from './slack';
@@ -11,6 +12,10 @@ const port = parseInt(process.env.PORT, 10) || 3000;
 const handle = dashboard.getRequestHandler();
 
 const server = express();
+
+if (process.env.SENTRY_DNS) {
+  raven.config(process.env.SENTRY_DNS).install();
+}
 
 function loadModules() {
   let activateModules = Object.keys(modules);
