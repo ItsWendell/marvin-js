@@ -6,6 +6,10 @@ import commands from '../providers/commands';
 let client;
 
 export function activate() {
+    if (!process.env.INTRA42_CLIENT_ID || !process.env.INTRA42_CLIENT_SECRET) {
+        throw new Error('No client ID and secret found for the 42 Intra API');
+    }
+
     client = new Intra42Client(
         process.env.INTRA42_CLIENT_ID,
         process.env.INTRA42_CLIENT_SECRET
@@ -13,7 +17,9 @@ export function activate() {
 
     client.authorizeClient().then((tokens) => {
         console.log('[Intra 42] Connected to the 42 network!');
-    });
+    }).catch((error) => {
+        throw new Error(`Unable to connect to the 42 network. Error: ${error.message}`);
+    })
 
     commands
         .command('intra', 'Commands for the Intranet of the 42 network.', (yargs) => {

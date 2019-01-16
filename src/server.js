@@ -29,7 +29,7 @@ function loadModules() {
         modules[key].activate();
         console.log('[Modules] Activated module', key);
       } catch (error) {
-        console.log('[Modules] Failed loading module', key);
+        console.log(`[Modules] Failed loading module ${key}, error: ${error.message}`);
       }      
     }
   });
