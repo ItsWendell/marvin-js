@@ -13,7 +13,13 @@ const handle = dashboard.getRequestHandler();
 const server = express();
 
 function loadModules() {
-  Object.keys(modules).forEach((key) => {
+  const disabledModules = (process.env.DISABLED_MODULES || '').split(',');
+  console.log('[Modules] Disabled Modules: ', disabledModules);
+  const activateModules = Object.keys(modules).filter((module) => (
+    !disabledModules.includes(module)
+  ));
+
+  activateModules.forEach((key) => {
     if (typeof modules[key].activate === "function") {
       modules[key].activate();
       console.log('[Modules] Activated module', key);
