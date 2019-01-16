@@ -13,11 +13,15 @@ const handle = dashboard.getRequestHandler();
 const server = express();
 
 function loadModules() {
-  const disabledModules = (process.env.DISABLED_MODULES || '').split(',');
-  console.log('[Modules] Disabled Modules: ', disabledModules);
-  const activateModules = Object.keys(modules).filter((module) => (
-    !disabledModules.includes(module)
-  ));
+  let activateModules = Object.keys(modules);
+
+  if (process.env.DISABLED_MODULES) {
+    const disabledModules = (process.env.DISABLED_MODULES || '').split(',');
+    const activateModules = disabledModules.filter((module) => (
+      !disabledModules.includes(module)
+    ));
+    console.log('[Modules] Disabled Modules: ', disabledModules);
+  }
 
   activateModules.forEach((key) => {
     if (typeof modules[key].activate === "function") {
