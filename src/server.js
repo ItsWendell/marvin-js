@@ -25,8 +25,12 @@ function loadModules() {
 
   activateModules.forEach((key) => {
     if (typeof modules[key].activate === "function") {
-      modules[key].activate();
-      console.log('[Modules] Activated module', key);
+      try {
+        modules[key].activate();
+        console.log('[Modules] Activated module', key);
+      } catch (error) {
+        console.log('[Modules] Failed loading module', key);
+      }      
     }
   });
 }
@@ -52,10 +56,13 @@ dashboard.prepare().then(() => {
   server.listen(port, err => {
     if (err) throw err;
     console.log(`[Server] Ready on http://localhost:${port}`);
+    // Connect to MongoDB
     database.connect()
       .then(() => {
         console.log('[Database] Connected to', database.host);
+        // Connect to Slack Real Time Chat
         rtm.start().then(() => {
+          // Load MarvinJS modules
           loadModules();
         });
       })
