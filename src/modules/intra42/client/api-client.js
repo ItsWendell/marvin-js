@@ -1,4 +1,5 @@
 import axios from 'axios';
+import qs from 'qs';
 
 const API_HOST = 'https://api.intra.42.fr/v2';
 
@@ -7,6 +8,9 @@ const API_HOST = 'https://api.intra.42.fr/v2';
  */
 const api = axios.create({
 	baseURL: API_HOST,
+	paramsSerializer: (params) => {
+		return qs.stringify(params, { encode: false });
+	}
 });
 
 /**

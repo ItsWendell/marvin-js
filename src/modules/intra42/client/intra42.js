@@ -1,5 +1,6 @@
 import api from './api-client';
 import oauth2 from 'simple-oauth2';
+import qs from 'querystring';
 
 class Intra42Client {
     constructor(id, secret, host = 'https://api.intra.42.fr') {

@@ -1,5 +1,5 @@
 import { rtm } from '../slack';
-import { MessageHistory } from '../database';
+import { MessageHistory } from '../database/models';
 
 export function activate() {
     rtm.on('message', ({ text, user, channel, subtype, ts }) => {

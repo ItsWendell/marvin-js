@@ -15,10 +15,18 @@ class Database {
             mongoose.connect(DATABASE_URL)
                 .then(() => {
                     this.db = mongoose.connection.db;
-                    resolve(this.db);
+
+                    let modelPromises = [];
+                    // Initialize Models
+                    Object.keys(models).forEach(
+                        (model) => modelPromises.push(models[model].init())
+                    );
+
+                    Promise.all(modelPromises)
+                        .then(() => resolve(this.db))
                 })
                 .catch((error) => {
-                    reject(error.message);
+                    reject(error);
                 });
         });
     }
