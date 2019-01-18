@@ -9,20 +9,20 @@ export const commands = yargs()
     .scriptName('')
     .command('factoid <create|list>', 'Manage factiods within slack.', (yargs) => {
         return yargs
-            .command('create [command] [response]', 'child command of foo', {}, (argv) => {
+            .command('create [command] [response]', 'child command of foo', {}, async (argv) => {
                 const newFactiod = new Factoid({
                     command: argv.command,
                     response: argv.response,
                 });
 
                 try {
-                    newFactiod.save();
+                    await newFactiod.save();
                     rtm.sendMessage('Factiod saved!', argv.channel);
                 } catch (error) {
-                    rtm.sendMessage(`${error.message}`, argv.channel);
+                    if (error.name === 'MongoError' && error.code === 11000) {
+                        rtm.sendMessage(`Factoid \`!${argv.command}\` already exists!`, argv.channel);
+                    }
                 }
-
-                console.log('New Factiod :D', newFactiod.response);
             })
             .command('list', 'list factoids', {}, (argv) => {
                 Factoid.find({}).exec()
