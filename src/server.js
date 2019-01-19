@@ -17,6 +17,11 @@ if (process.env.SENTRY_DNS) {
   raven.config(process.env.SENTRY_DNS).install();
 }
 
+// We want to continue to run the server when asynchronous code fails
+process.on('uncaughtException', (err) => {
+  console.error('[Server] Asynchronous error caught:', err.message);
+});
+
 function loadModules() {
   let activateModules = Object.keys(modules);
 

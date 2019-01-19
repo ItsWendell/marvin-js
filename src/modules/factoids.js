@@ -1,60 +1,28 @@
 import yargs from 'yargs';
+import * as vm from '../providers/vm';
 import { rtm } from '../slack';
 
-import Factoid from '../database/models/factoid';
-import MessageHistory from '../database/models/message-history';
+import Factoid, { FactoidTypes } from '../database/models/factoid';
 
 export const commands = yargs()
     .usage('usage: $0 !<command>')
     .scriptName('')
-    .command('factoid <create|list>', 'Manage factiods within slack.', (yargs) => {
-        return yargs
-            .command('create [command] [response]', 'child command of foo', {}, async (argv) => {
-                const newFactiod = new Factoid({
-                    command: argv.command,
-                    response: argv.response,
-                });
-
-                try {
-                    await newFactiod.save();
-                    rtm.sendMessage('Factiod saved!', argv.channel);
-                } catch (error) {
-                    if (error.name === 'MongoError' && error.code === 11000) {
-                        rtm.sendMessage(`Factoid \`!${argv.command}\` already exists!`, argv.channel);
-                    }
-                }
-            })
-            .command('list', 'list factoids', {}, (argv) => {
-                Factoid.find({}).exec()
-                    .then((data) => {
-                        const commandsString = data.map((item) => item.command)
-                        rtm.sendMessage(`Factoids available ${commandsString}`, argv.channel);
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    })
-            })
-            .command('clear', 'list factoids', {}, (argv) => {
-                Factoid.find({}).remove().exec()
-                    .then((data) => {
-                        rtm.sendMessage(`Cleared out all factoids!`, argv.channel);
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    })
-            });
-    })
-    .command('*', false, {}, (argv) => {
+    .command('*', false, {}, ({ message, ...argv }) => {
         Factoid.findOne({ command: argv._[0] }).exec()
             .then((result) => {
                 if (result) {
-                    rtm.sendMessage(result.response, argv.channel);
+                    if (result.type === FactoidTypes.Javascript) {
+                        vm.runScriptContext(result.response, message);
+                    } else {
+                        rtm.sendMessage(result.response, argv.channel);
+                    }
                 }
             });
     });
 
 export function activate() {
-    rtm.on('message', ({ text, user, channel, ...message }) => {
+    rtm.on('message', (message) => {
+        const { text, user, channel } = message;
         // Skip messages that are from a bot or my own user ID
         if ((message.subtype && message.subtype === 'bot_message') ||
             (!message.subtype && user === rtm.activeUserId)) {
@@ -63,7 +31,7 @@ export function activate() {
 
         if (text && text.startsWith('!')) {
             commands.parse(text.substr(1), {
-                channel: channel
+                message
             }, (err, argv, output) => {
                 if (output) {
                     rtm.sendMessage(output, channel);
