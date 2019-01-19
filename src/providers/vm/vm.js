@@ -1,4 +1,4 @@
-import { VM, VMScript } from 'vm2';
+import { VM } from 'vm2';
 import AppContext from './context';
 import axios from 'axios';
 
