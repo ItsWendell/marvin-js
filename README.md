@@ -1,15 +1,24 @@
 # MarvinJS
 
-MarvinJS is a community / campus bot for Slack inspired by [Marvin, a Slack bot for 42 USA](https://github.com/riking/marvin).
+MarvinJS is a campus Slack bot for the Encole 42 college network, inspired by [Marvin, a Slack bot for 42 USA](https://github.com/riking/marvin).
 
-## Goals
+Instead of being written in Go, MarvinJS is a node server written in ES6 / Javascript with a server-side rendered NextJS dashboard.
 
-As this project is still in early development, here are a couple of goals and features for this project.
+## Features / Goals
 
-* Easy configuration and deployment
-* Support for user-generated content through Factoids / modules
-* Web Interface
-* Slack History logger
+As this project is still in early development, here are the goals / features we want to have implemented before we offically suggest to implement this bot in one of the campusses.
+
+* Chat History
+* User-Generated Commands (factoids)
+* (Private) Channel management
+* Daily Updates for e.g. Coalitions for the primary campus
+* Feeds (Twitter / RSS)
+* Bot Dashboard
+  * Write factoids
+  * See Chat History
+  * Login with your slack / or intra account
+  * Channel overview
+  * Private channels
 
 ## Getting started
 
@@ -21,15 +30,13 @@ Once you have a bot token set the token in your .env file in the root folder of 
 SLACK_TOKEN=YOUR-BOT-TOKEN-HERE
 ```
 
-If you want to test the 42 intranet integration you'll need an app secret and key from 42. [Read more about this here.](https://api.intra.42.fr/apidoc/guides/getting_started#create-an-application).
+If you want to test the 42 intranet integration you'll need an app secret and key from 42. [Read more about this here.](https://api.intra.42.fr/apidoc/guides/getting_started#create-an-application). For this bot to be useful for other purposes we'll focus on making the intranet integration as modular as possible.
 
 ```(env)
 INTRA42_CLIENT_ID=
 INTRA42_CLIENT_SECRET=
 INTRA42_CAMPUS_ID=
 ```
-
-(Optionally set your primary campus for the bot)
 
 Run a local MongoDB database with [Docker Compose](https://docs.docker.com/compose/install/) in a seperate console;
 
@@ -50,10 +57,32 @@ npm run dev
 
 There are a few basic commands that are integrated that you can list by either talking to MarvinJS directly in a Direct Message, or @ tagging him.
 
-To list those commands you can say !help.
+To list those commands you can simply DM the bot and say `help`.
 
-## Factiods
+## Factoids
 
-Factoids are running as `!help`, explanation mark commands. Factoids are simple community contriubted commands that can be created from Slack. You can use Factoids to store frequently asked questions, for example a `!wifi` command that explains how to connect to Wi-Fi.
+Factoids are running as (`!wifi`) explanation mark commands. Factoids are simple user-generated commands that can be created using the `factoid` command or in the dashboard. You can use factoids to store frequently asked questions, for example a `!wifi` command that explains how to connect to Wi-Fi.
 
-Factiods now only support text but we're looking to supporting custom scripts with for example Lua or Javascript soon, so community members can contribute handy snippets.
+Example:
+
+`factoid create wifi "See how to connect with wifi here \<link\>"`
+
+### JavaScript Factoids
+
+JavaScript factoids run in an isolated vm context with support for the following objects and functions:
+
+* `message` - Slack object with the RTM Message. [Message Event @ Slack](https://api.slack.com/events/message)
+* `sendMessage(message)` - Sends a message back to the incoming message sender.
+* `axios` - A promise based http client, [axios](https://github.com/axios/axios) for simple http requests. e.g. `axois.get(url).then(callback)`
+
+Example code for a javascript factoid:
+
+```(javascript)
+axios
+.get('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD')
+    .then(function (response) {
+        sendMessage(`Bitcoin Price: ${response.data.USD} USD`);
+    });
+```
+
+To create javascript factoids you have to upload it as a JavaScript file / snippet in Slack with the message `factoid create bitcoin` for the example mentoined above.
