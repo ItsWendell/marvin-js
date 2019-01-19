@@ -14,7 +14,7 @@ export const commands = yargs()
                     if (result.type === FactoidTypes.Javascript) {
                         vm.runScriptContext(result.response, message);
                     } else {
-                        rtm.sendMessage(result.response, argv.channel);
+                        rtm.sendMessage(result.response, message.channel);
                     }
                 }
             });

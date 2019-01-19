@@ -26,8 +26,8 @@ export function activate() {
         });
 
     commands
-        .command('coalitions', 'Coalition commands of the 42 network.', {}, (argv) => {
-            sendCoalitionStats(argv.channel);
+        .command('coalitions', 'Coalition commands of the 42 network.', {}, ({ message }) => {
+            sendCoalitionStats(message.channel);
         })
 
     jobs.register();

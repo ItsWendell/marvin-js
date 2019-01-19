@@ -1,6 +1,7 @@
-import { VM } from 'vm2';
+import { VM, VMScript } from 'vm2';
 import AppContext from './context';
 import axios from 'axios';
+import { resolve } from 'dns';
 
 export function runScriptContext(code, message = {}) {
     const appContext = new AppContext(message);
@@ -18,7 +19,7 @@ export function runScriptContext(code, message = {}) {
     try {
         vm.run(code);
     } catch (error) {
-        appContext.sendMessage(`[VM] Code seems to be broken: ${error.message}`);
-        console.log(`[VM] Code seems to be broken: ${error.message}`, error);
+        appContext.sendMessage(`Code seems to be broken: ${error.message}`);
+        console.log(`[VM] Code seems to be broken: ${error.message}`);
     }
 }

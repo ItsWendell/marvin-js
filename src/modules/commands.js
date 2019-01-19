@@ -42,7 +42,6 @@ function registerCommands() {
                 .command('create <command> [response]', 'Create factoids using snippets or text responses', {}, async ({ command, response, message, ...argv}) => {
                     // Upload snippets to the factoid database.
                     if (message && message.files) {
-                        console.log('file found.');
                         // Filter only javascript snippets which are not truncated .
                         const snippets = message.files.filter((file) =>
                             file.filetype === 'javascript' && file.preview_is_truncated === false
@@ -50,18 +49,21 @@ function registerCommands() {
 
                         if (snippets.length) {
                             const snippet = snippets[0];
-                            const newFactoid = new Factoid({
-                                command: command,
-                                type: FactoidTypes.Javascript,
-                                response: snippet.preview,
-                            });
-
                             try {
+                                const newFactoid = new Factoid({
+                                    command: command,
+                                    type: FactoidTypes.Javascript,
+                                    response: snippet.preview,
+                                });
+                                
+                                await vm.runScriptContext(snippet)
                                 await newFactoid.save();
                                 rtm.sendMessage('Factiod saved!', message.channel);
                             } catch (error) {
                                 if (error.name === 'MongoError' && error.code === 11000) {
                                     rtm.sendMessage(`Factoid \`!${command}\` already exists!`, message.channel);
+                                } else {
+                                    rtm.sendMessage(`Something went wrong: ${error.message}`, message.channel);
                                 }
                             }
                         }
@@ -96,15 +98,6 @@ function registerCommands() {
                             console.log(err);
                         })
                 })
-                .command('clear', 'Delete all factoids from database.', {}, ({ message }) => {
-                    Factoid.find({}).remove().exec()
-                        .then((data) => {
-                            rtm.sendMessage(`Cleared out all factoids!`, message.channel);
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                        })
-                })
         })
         .command('history', 'Show all history logs', {}, (argv) => {
             MessageHistory.find({}).exec()
@@ -114,7 +107,7 @@ function registerCommands() {
                     })
                 });
         })
-        .command('run [code..]', '', {}, ({ _: params, code, message }) => {
+        .command('run [code..]', 'Run / Test code for factoids. (Upload code as snippet)', {}, ({ _: params, code, message }) => {
             if (message.files) {
                 const snippets = message.files.filter((file) =>
                     file.filetype === 'javascript' && file.preview_is_truncated === false
@@ -126,7 +119,7 @@ function registerCommands() {
             } else if (code) {
                 const snippet = code.join(' ');
                 vm.runScriptContext(snippet, message);
-            }else {
+            } else {
                 rtm.sendMessage('You should attach a Javascript snippet / file as code!', message.channel);
             }
         })
