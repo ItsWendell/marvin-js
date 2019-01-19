@@ -1,7 +1,6 @@
 import { VM, VMScript } from 'vm2';
 import AppContext from './context';
 import axios from 'axios';
-import { resolve } from 'dns';
 
 export function runScriptContext(code, message = {}) {
     const appContext = new AppContext(message);
