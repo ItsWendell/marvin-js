@@ -72,7 +72,7 @@ export function activate() {
                             rtm.sendMessage(`Something went wrong: ${error.message}`, message.channel);
                         })
                 })
-                .command('auth', 'Reauthenticate the intra 42.', {}, () => {
+                .command('auth', 'Reauthenticate the intra 42.', {}, ({ message }) => {
                     client.authorizeClient()
                     .then((tokens) => {
                         rtm.sendMessage(`Reauthenticated.`, message.channel);
