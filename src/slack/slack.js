@@ -18,4 +18,5 @@ rtm.on('connected', () => {
   });
 });
 
+// Export the RTM and WEB clients
 export { rtm, web };

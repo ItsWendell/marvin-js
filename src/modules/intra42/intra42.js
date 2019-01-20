@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { rtm, web } from '../../slack';
 
 import Intra42Client from './client';
@@ -26,8 +27,42 @@ export function activate() {
         });
 
     commands
-        .command('coalitions', 'Coalition commands of the 42 network.', {}, ({ message }) => {
-            sendCoalitionStats(message.channel);
+        .command('intra', 'Commands related to the 42 intranet.', (yargs) => {
+            return yargs
+                .command('coalitions', 'Coalition commands of the 42 network.', {}, ({ message }) => {
+                    sendCoalitionStats(mesuseridsage.channel);
+                })
+                .command('hours <username>', 'Return checked in hours of an user.', {}, ({ message, username }) => {
+                    const weekStart = moment().startOf('isoWeek').toISOString();
+                    const weekEnd = moment().endOf('isoWeek').toISOString();
+
+                    client
+                        .get(`/users/${username}/locations`, {
+                            range: {
+                                begin_at: `${weekStart},${weekEnd}`,
+                                end_at: `${weekStart},${weekEnd}`,
+                            }
+                        })
+                        .then((data) => {
+                            if (data) {
+                                const totalDuration = data.reduce((duration, item) => {
+                                    const itemStart = moment(item.begin_at);
+                                    const itemEnd = moment(item.end_at);
+                                    const itemDuration = moment.duration(itemEnd.diff(itemStart));
+                                    return duration.add(itemDuration)
+                                }, moment.duration({}));
+
+                                const totalHours = (totalDuration.days() * 24) + totalDuration.hours();
+                                rtm.sendMessage(`${username} has ` +
+                                    `${totalHours} hours and ` +
+                                    `${totalDuration.minutes()} minutes ` +
+                                    `logged in this week.`, message.channel);
+                            }
+                        })
+                        .catch((error) => {
+                            rtm.sendMessage(`Something went wrong: ${error.message}`, message.channel);
+                        })
+                });
         })
 
     jobs.register();

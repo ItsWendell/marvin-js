@@ -13,6 +13,10 @@ const handle = dashboard.getRequestHandler();
 
 const server = express();
 
+/**
+ * Sentry Implementation
+ * @see https://docs.sentry.io/
+ */
 if (process.env.SENTRY_DNS) {
   raven.config(process.env.SENTRY_DNS).install();
 }
@@ -25,6 +29,7 @@ process.on('uncaughtException', (err) => {
 function loadModules() {
   let activateModules = Object.keys(modules);
 
+  // Disable certain modules within the environment file
   if (process.env.DISABLED_MODULES) {
     const disabledModules = (process.env.DISABLED_MODULES || '').split(',');
     const activateModules = disabledModules.filter((module) => (
@@ -33,6 +38,7 @@ function loadModules() {
     console.log('[Modules] Disabled Modules: ', disabledModules);
   }
 
+  // Activate exported modules by key
   activateModules.forEach((key) => {
     if (typeof modules[key].activate === "function") {
       try {
@@ -56,7 +62,7 @@ dashboard.prepare().then(() => {
   server.use('/api/slack', SlackRoutes);
 
   /**
-   * Return our nextJs web pages.
+   * Return our nextJS dashboard pages.
    */
   server.get('*', (req, res) => {
     return handle(req, res)
@@ -78,7 +84,7 @@ dashboard.prepare().then(() => {
       })
       .catch((error) => {
         console.log('[Database]', error.message);
-      })
+      });
   });
 });
 

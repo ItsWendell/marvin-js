@@ -11,7 +11,6 @@ export default class extends Component {
       const { models } = req;
       const params = channel ? { channelId: channel } : {};
       const history = await models.MessageHistory.find(params).exec();
-      console.log(history);
       return { history };
     }
   }

@@ -1,19 +1,10 @@
 {
-    "version": 2,
+    "version": 1,
     "name": "marvinjs",
     "regions": ["bru"],
-    "builds": [
-        {
-            "src": "package.json",
-            "use": "@now/next"
-        },
-        {
-            "src": "src/index.js",
-            "use": "@now/node-server"
-        }
-    ],
     "env": {
-        "NODE_PATH": "./src",
+        "PORT": "80",
+        "NODE_ENV": "production",
         "SLACK_TOKEN": "@marvinjs-slack-token",
         "DATABASE_URL": "@marvinjs-database-url"
     }

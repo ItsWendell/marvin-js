@@ -6,9 +6,8 @@ export default class extends Component {
   static async getInitialProps ({ req }) {
     if (req) {
       const { models } = req;
-      const factoids = await models.Factoid.find({}).exec();        
-      console.log(factoids);
-      return { factoids }
+      const factoids = await models.Factoid.find({}).exec();
+      return { factoids };
     }
   }
 

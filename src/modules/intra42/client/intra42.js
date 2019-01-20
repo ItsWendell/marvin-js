@@ -37,13 +37,25 @@ class Intra42Client {
                 })
                 .catch((error) => {
                     reject(error);
-                }); 
+                });
         });
     }
 
     getBlocs(params) {
         return new Promise((resolve, reject) => {
             api.get('/blocs', { params })
+                .then(({ data }) => {
+                    resolve(data);
+                })
+                .catch((error) => {
+                    reject(error);
+                });
+        });
+    }
+
+    get(path, params = {}) {
+        return new Promise((resolve, reject) => {
+            api.get(path, { params })
                 .then(({ data }) => {
                     resolve(data);
                 })
