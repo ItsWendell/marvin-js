@@ -1,0 +1,70 @@
+{
+    "name": "MarvinJS",
+    "description": "A campus / community slack bot designed for 42 and relative campuses.",
+    "keywords": [
+        "42",
+        "Encole 42",
+        "Slack Bot"
+    ],
+    "website": "https://github.com/ItsWendell/marvin-js",
+    "repository": "https://github.com/ItsWendell/marvin-js",
+    "success_url": "https://github.com/ItsWendell/marvin-js",
+    "scripts": {
+      "postdeploy": "bundle exec rake bootstrap"
+    },
+    "env": {
+      "SLACK_TOKEN": {
+        "description": "A secret key for verifying the integrity of signed cookies.",
+        "generator": "secret"
+      },
+      "INTRA42_CLIENT_ID": {
+        "description": "(Optional) C",
+        "generator": "secret"
+      },
+      "INTRA42_CLIENT_SECRET": {
+        "description": "(Optional) A secret key for verifying the integrity of signed cookies.",
+        "generator": "secret"
+      },
+      "INTRA42_CAMPUS_ID": {
+        "description": "(Optional) A secret key for verifying the integrity of signed cookies.",
+        "generator": "secret",
+        "value": ""
+      },
+      "WEB_CONCURRENCY": {
+        "description": "The number of processes to run.",
+        "value": "5"
+      }
+    },
+    "formation": {
+      "web": {
+        "quantity": 2,
+        "size": "Performance-M"
+      }
+    },
+    "image": "heroku/ruby",
+    "addons": [
+      "openredis",
+      {
+        "plan": "mongolab:shared-single-small",
+        "as": "MONGO"
+      },
+      {
+        "plan": "heroku-postgresql",
+        "options": {
+          "version": "9.5"
+        }
+      }
+    ],
+    "buildpacks": [
+      {
+        "url": "https://github.com/stomita/heroku-buildpack-phantomjs"
+      }
+    ],
+    "environments": {
+      "test": {
+        "scripts": {
+          "test": "bundle exec rake test"
+        }
+      }
+    }
+  }

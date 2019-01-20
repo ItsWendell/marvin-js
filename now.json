@@ -6,6 +6,6 @@
         "PORT": "80",
         "NODE_ENV": "production",
         "SLACK_TOKEN": "@marvinjs-slack-token",
-        "DATABASE_URL": "@marvinjs-database-url"
+        "MONGODB_URI": "@marvinjs-database-url"
     }
 }

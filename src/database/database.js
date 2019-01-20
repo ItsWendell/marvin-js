@@ -1,18 +1,18 @@
 import mongoose from 'mongoose';
 import * as models from './models';
 
-const DATABASE_URL = process.env.DATABASE_URL || 'mongodb://127.0.0.1/marvinjs';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1/marvinjs';
 
 class Database {
     constructor() {
         this.db = null;
-        this.host = DATABASE_URL;
+        this.host = MONGODB_URI;
         this.models = models;
     }
 
     connect = () => {
         return new Promise((resolve, reject) => {
-            mongoose.connect(DATABASE_URL)
+            mongoose.connect(MONGODB_URI)
                 .then(() => {
                     this.db = mongoose.connection.db;
 
