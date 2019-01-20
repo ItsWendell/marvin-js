@@ -72,6 +72,15 @@ export function activate() {
                             rtm.sendMessage(`Something went wrong: ${error.message}`, message.channel);
                         })
                 })
+                .command('auth', 'Reauthenticate the intra 42.', {}, () => {
+                    client.authorizeClient()
+                    .then((tokens) => {
+                        rtm.sendMessage(`Reauthenticated.`, message.channel);
+                    })
+                    .catch((error) => {
+                        rtm.sendMessage(`Error: ${error.message}`, message.channel)
+                    });
+                })
         })
 
     jobs.register();
