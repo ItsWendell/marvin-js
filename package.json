@@ -7,7 +7,7 @@
     "build": "npm run build:next",
     "build:next": "next build src/dashboard",
     "heroku-postbuild": "npm run build",
-    "start": "NODE_ENV=production node src/index.js"
+    "start": "NODE_ENV=production node src/index.js -p $PORT"
   },
   "dependencies": {
     "@babel/node": "^7.2.2",
