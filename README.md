@@ -4,6 +4,10 @@ MarvinJS is a campus Slack bot for the Encole 42 college network, inspired by [M
 
 Instead of being written in Go, MarvinJS is a node server written in ES6 / Javascript with a server-side rendered NextJS dashboard.
 
+## Join us
+
+We've a staging bot running at Slack https://marvinjs.slack.com/ and on https://marvinjs-staging.herokuapp.com/, join us with improving marvinJS!
+
 ## Features / Goals
 
 As this project is still in early development, here are the goals / features we want to have implemented before we offically suggest to implement this bot in one of the campusses.
@@ -95,3 +99,5 @@ axios
 ```
 
 To create javascript factoids you have to upload it as a JavaScript file / snippet in Slack with the message `factoid create bitcoin` for the example mentoined above.
+
+## Join us
