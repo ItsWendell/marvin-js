@@ -29,6 +29,8 @@ export function activate() {
     commands
         .command('intra', 'Commands related to the 42 intranet.', (yargs) => {
             return yargs
+                .showHelpOnFail(true)
+                .demandCommand(1, '')
                 .command('coalitions', 'Coalition commands of the 42 network.', {}, ({ message }) => {
                     sendCoalitionStats(mesuseridsage.channel);
                 })
@@ -62,7 +64,7 @@ export function activate() {
                         .catch((error) => {
                             rtm.sendMessage(`Something went wrong: ${error.message}`, message.channel);
                         })
-                });
+                })
         })
 
     jobs.register();
