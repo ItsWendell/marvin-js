@@ -73,7 +73,7 @@ dashboard.prepare().then(() => {
   /**
    * Catch error's and sent 500 errors instead of server failing...
    */
-  app.use(function onError(err, req, res, next) {
+  server.use((err, req, res, next) => {
     res.statusCode = 500;
     res.end(res.sentry + '\n');
   });
