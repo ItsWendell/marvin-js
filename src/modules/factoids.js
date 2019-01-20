@@ -33,7 +33,7 @@ export function activate() {
         }
 
         if (text && text.startsWith('!')) {
-            commands.parse(text.substr(1), {
+            factoidCommands.parse(text.substr(1), {
                 message
             }, (err, argv, output) => {
                 if (output) {
