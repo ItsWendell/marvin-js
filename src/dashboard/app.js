@@ -2,7 +2,7 @@ import next from 'next';
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({
-    dir: dev ? './src/dashboard' : './build/dashboard', 
+    dir: './src/dashboard', 
     dev, 
     quiet: true,
 });
