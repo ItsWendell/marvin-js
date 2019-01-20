@@ -59,6 +59,15 @@ There are a few basic commands that are integrated that you can list by either t
 
 To list those commands you can simply DM the bot and say `help`.
 
+### Intra42 commands
+
+Here are the currently implemented intra42 commands:
+
+* `intra coalitions` - Shows the primary campus of the bot coalition points.
+* `intra hours <username>` - Show the hours logged in this week of the provided username.
+
+The coalitions command is also scheduled to run everyday at 10 in the morning in the primary general slack channel of the workspace.
+
 ## Factoids
 
 Factoids are running as (`!wifi`) explanation mark commands. Factoids are simple user-generated commands that can be created using the `factoid` command or in the dashboard. You can use factoids to store frequently asked questions, for example a `!wifi` command that explains how to connect to Wi-Fi.
