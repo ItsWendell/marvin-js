@@ -48,6 +48,8 @@ export function registerCommands() {
     commands
         .command('factoid <create|list>', 'Manage factiods within slack.', (yargs) => {
             return yargs
+                .showHelpOnFail(true)
+                .demandCommand(1, '')
                 .command('create <command> [response]', 'Create factoids using snippets or text responses', {}, async ({ command, response, message, ...argv }) => {
                     // Upload snippets to the factoid database.
                     if (message && message.files) {
