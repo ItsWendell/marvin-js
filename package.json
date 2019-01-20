@@ -4,10 +4,9 @@
   "main": "build/server.js",
   "scripts": {
     "dev": "nodemon src/",
-    "build": "npm run build:next && npm run build:server",
+    "build": "npm run build:next",
     "build:next": "next build src/dashboard",
-    "build:server": "babel src/ --out-dir build --ignore src/index.js",
-    "start": "NODE_ENV=production node build/server.js"
+    "start": "NODE_ENV=production PORT=80 node src/index.js"
   },
   "dependencies": {
     "@babel/node": "^7.2.2",
