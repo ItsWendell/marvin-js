@@ -19,6 +19,8 @@ const server = express();
  */
 if (process.env.SENTRY_DNS) {
   Sentry.init({ dsn: process.env.SENTRY_DNS });
+  server.use(Sentry.Handlers.requestHandler());
+  server.use(Sentry.Handlers.errorHandler());
 }
 
 // We want to continue to run the server when asynchronous code fails
@@ -68,6 +70,13 @@ dashboard.prepare().then(() => {
     return handle(req, res)
   });
 
+  /**
+   * Catch error's and sent 500 errors instead of server failing...
+   */
+  app.use(function onError(err, req, res, next) {
+    res.statusCode = 500;
+    res.end(res.sentry + '\n');
+  });
 
   server.listen(port, err => {
     if (err) throw err;
