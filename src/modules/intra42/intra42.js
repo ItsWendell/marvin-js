@@ -37,25 +37,39 @@ export function activate() {
                 .command('coalitions', 'Coalition commands of the 42 network.', {}, ({ message }) => {
                     sendCoalitionStats(message.channel);
                 })
-                .command('hours <username>', 'Return checked in hours of an user.', {}, ({ message, username }) => {
-                    const range = [
-                        moment().startOf('isoWeek').toISOString(),
-                        moment().endOf('isoWeek').toISOString(),
-                    ].join(',');
+                .command('hours <username>', 'Return accurate checked in hours of an this week.', {}, ({ message, username, f: full }) => {
+                    const weekStart = moment().utc().startOf('isoWeek');
+                    const weekEnd = moment().utc().endOf('isoWeek');
 
                     client
                         .get(`/users/${username}/locations`, {
                             range: {
-                                begin_at: range,
-                                end_at: range,
+                                // Parse 2 extra days for longer sessions, more accurate data
+                                begin_at: `${weekStart.clone().subtract(2, 'days').toISOString()},${weekEnd.clone().add(2, 'days').toISOString()}`,
                             }
                         })
                         .then((data) => {
                             if (data) {
                                 // Add up a total duration of the current rage
                                 const totalDuration = data.reduce((duration, item) => {
-                                    const itemStart = moment(item.begin_at);
-                                    const itemEnd = moment(item.end_at);
+                                    let itemStart = moment.utc(item.begin_at)
+                                    let itemEnd = !item.end_at ? moment().utc() : moment.utc(item.end_at);
+
+                                    // If item is out of range of the week
+                                    if ((itemStart.isBefore(weekStart) && itemEnd.isBefore(weekStart)) || itemStart.isAfter(weekEnd)) {
+                                        return duration;
+                                    }
+
+                                    // If item is starting before week but ending within week
+                                    if (itemStart.isBefore(weekStart) && itemEnd.isBefore(weekEnd)) {
+                                        itemStart = weekStart;
+                                    }
+
+                                    // If item end is after week end
+                                    if (itemEnd.isAfter(weekEnd)) {
+                                        itemEnd = weekEnd;
+                                    }
+
                                     const itemDuration = moment.duration(itemEnd.diff(itemStart));
                                     return duration.add(itemDuration)
                                 }, moment.duration({}));
@@ -74,12 +88,12 @@ export function activate() {
                 })
                 .command('auth', 'Reauthenticate the intra 42.', {}, ({ message }) => {
                     client.authorizeClient()
-                    .then((tokens) => {
-                        rtm.sendMessage(`Reauthenticated.`, message.channel);
-                    })
-                    .catch((error) => {
-                        rtm.sendMessage(`Error: ${error.message}`, message.channel)
-                    });
+                        .then((tokens) => {
+                            rtm.sendMessage(`Reauthenticated.`, message.channel);
+                        })
+                        .catch((error) => {
+                            rtm.sendMessage(`Error: ${error.message}`, message.channel)
+                        });
                 })
         })
 
