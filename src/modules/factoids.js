@@ -45,6 +45,7 @@ export function activate() {
 }
 
 export function registerCommands() {
+    const userId = rtm.activeUserId;
     commands
         .command([
             'factoid',
@@ -53,6 +54,8 @@ export function registerCommands() {
             return yargs
                 .showHelpOnFail(true)
                 .demandCommand(1, '')
+                .usage(`Usage: To use a actual factoid, I have to be in the channel and you can say \`!somefactoid\` for example.`)
+                .epilogue(`Hint: Mention me (<@${userId}>) in a channel to invite me!`)
                 .command('create <command> [response]', 'Create factoids using snippets or text responses', {}, async ({ command, response, message, ...argv }) => {
                     // Upload snippets to the factoid database.
                     if (message && message.files) {

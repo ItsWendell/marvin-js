@@ -34,7 +34,11 @@ export function activate() {
 }
 
 function registerCommands() {
+    const userId = rtm.activeUserId;
     commands
+        .usage(`Usage: Send me a direct message or mention me (<@${userId}>) with the command!`)
+        .epilogue('For more information, checkout our Github: https://github.com/ItsWendell/marvin-js/')
+        .wrap(null)
         .command('ping', 'Pong!', {}, ({ message }) => {
             rtm.sendMessage('Pong!', message.channel);
         })
