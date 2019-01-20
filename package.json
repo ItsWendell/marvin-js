@@ -1,6 +1,7 @@
 {
   "name": "marvinjs",
   "version": "0.1.0",
+  "description": "A campus / community slack bot designed for 42 and relative campuses.",
   "main": "build/server.js",
   "scripts": {
     "dev": "nodemon src/",
@@ -10,7 +11,12 @@
     "start": "NODE_ENV=production node src/index.js -p $PORT"
   },
   "dependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
     "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/register": "^7.0.0",
+    "@sentry/node": "^4.5.2",
     "@slack/client": "^4.8.0",
     "@zeit/next-less": "^1.0.1",
     "antd": "^3.12.3",
@@ -29,11 +35,7 @@
     "react-dom": "^16.7.0",
     "simple-oauth2": "^2.2.1",
     "vm2": "^3.6.6",
-    "yargs": "^12.0.5",
-    "@babel/register": "^7.0.0",
-    "@babel/core": "^7.2.2",
-    "@babel/cli": "^7.2.3",
-    "@babel/preset-env": "^7.2.3"
+    "yargs": "^12.0.5"
   },
   "devDependencies": {
     "nodemon": "^1.18.9"

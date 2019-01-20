@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import raven from 'raven';
+import Sentry from '@sentry/node';
 import express from 'express';
 
 import { rtm, routes as SlackRoutes } from './slack';
@@ -18,7 +18,7 @@ const server = express();
  * @see https://docs.sentry.io/
  */
 if (process.env.SENTRY_DNS) {
-  raven.config(process.env.SENTRY_DNS).install();
+  Sentry.init({ dsn: process.env.SENTRY_DNS });
 }
 
 // We want to continue to run the server when asynchronous code fails
@@ -46,7 +46,7 @@ function loadModules() {
         console.log('[Modules] Activated module', key);
       } catch (error) {
         console.log(`[Modules] Failed loading module ${key}, error: ${error.message}`);
-      }      
+      }
     }
   });
 }
