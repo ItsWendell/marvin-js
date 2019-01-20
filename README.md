@@ -4,9 +4,12 @@ MarvinJS is a campus Slack bot for the Encole 42 college network, inspired by [M
 
 Instead of being written in Go, MarvinJS is a node server written in ES6 / Javascript with a server-side rendered NextJS dashboard.
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/ItsWendell/marvin-js/tree/develop)
+*Heroku deployment is expirimental and in staging mode*
+
 ## Join us
 
-We've a staging bot running at Slack https://marvinjs.slack.com/ and on https://marvinjs-staging.herokuapp.com/, join us with improving marvinJS!
+We've a staging / demo bot running at Slack https://marvinjs.slack.com/ and on https://marvinjs-staging.herokuapp.com/, join us with improving marvinJS!
 
 [Join us on slack!](https://join.slack.com/t/marvinjs/shared_invite/enQtNTI3NzIwMjYxMDA4LWViMjc3YWIxNTQ5N2ZhMzE2Y2E5Y2I5ZDIyMGY4YjkyMGJlZWRhZTQzZWM0OTAwNDBiMmU0OTFjMjJjNDFlMTY)
 
@@ -14,12 +17,13 @@ We've a staging bot running at Slack https://marvinjs.slack.com/ and on https://
 
 As this project is still in early development, here are the goals / features we want to have implemented before we offically suggest to implement this bot in one of the campusses.
 
-* Chat History
-* User-Generated Commands (factoids)
-* (Private) Channel management
-* Daily Updates for e.g. Coalitions for the primary campus
-* Feeds (Twitter / RSS)
-* Bot Dashboard
+* User-Generated Factoids / Commands (*implemented*)
+* Chat History (*partly implemented*)
+* Intra42 API Commands (*partly implemented*)
+* (Private) Channel Management (*not yet implemented*)
+* Daily Updates for e.g. Coalitions for the primary campus (*implemented*)
+* Feeds (Twitter / RSS) (*not implemented yet*)
+* Bot Dashboard (*not yet fully implemented*)
   * Write factoids
   * See Chat History
   * Login with your slack / or intra account
@@ -50,7 +54,7 @@ Run a local MongoDB database with [Docker Compose](https://docs.docker.com/compo
 docker-compose up database
 ```
 
-If you're running this bot in production, or running your database on a different port or host, you can set the variable `DATABASE_URL` in your .env file.
+If you're running this bot in production, or running your database on a different port or host, you can set the variable `MONGODB_URI` in your .env file.
 
 Install node packages and run the dev command and you're ready to go!
 
@@ -101,5 +105,3 @@ axios
 ```
 
 To create javascript factoids you have to upload it as a JavaScript file / snippet in Slack with the message `factoid create bitcoin` for the example mentoined above.
-
-## Join us
