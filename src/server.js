@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import Sentry from '@sentry/node';
+import * as Sentry from '@sentry/node';
 import express from 'express';
 
 import { rtm, routes as SlackRoutes } from './slack';
