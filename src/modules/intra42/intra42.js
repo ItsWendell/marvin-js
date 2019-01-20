@@ -27,7 +27,10 @@ export function activate() {
         });
 
     commands
-        .command('intra', 'Commands related to the 42 intranet.', (yargs) => {
+        .command([
+            'intra42',
+            'intra'
+        ], 'Commands related to the 42 intranet.', (yargs) => {
             return yargs
                 .showHelpOnFail(true)
                 .demandCommand(1, '')

@@ -46,7 +46,10 @@ export function activate() {
 
 export function registerCommands() {
     commands
-        .command('factoid <create|list>', 'Manage factiods within slack.', (yargs) => {
+        .command([
+            'factoid',
+            'factoids'
+        ], 'Manage factoids within slack.', (yargs) => {
             return yargs
                 .showHelpOnFail(true)
                 .demandCommand(1, '')
