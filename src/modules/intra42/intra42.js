@@ -35,21 +35,24 @@ export function activate() {
                 .showHelpOnFail(true)
                 .demandCommand(1, '')
                 .command('coalitions', 'Coalition commands of the 42 network.', {}, ({ message }) => {
-                    sendCoalitionStats(mesuseridsage.channel);
+                    sendCoalitionStats(message.channel);
                 })
                 .command('hours <username>', 'Return checked in hours of an user.', {}, ({ message, username }) => {
-                    const weekStart = moment().startOf('isoWeek').toISOString();
-                    const weekEnd = moment().endOf('isoWeek').toISOString();
+                    const range = [
+                        moment().startOf('isoWeek').toISOString(),
+                        moment().endOf('isoWeek').toISOString(),
+                    ].join(',');
 
                     client
                         .get(`/users/${username}/locations`, {
                             range: {
-                                begin_at: `${weekStart},${weekEnd}`,
-                                end_at: `${weekStart},${weekEnd}`,
+                                begin_at: range,
+                                end_at: range,
                             }
                         })
                         .then((data) => {
                             if (data) {
+                                // Add up a total duration of the current rage
                                 const totalDuration = data.reduce((duration, item) => {
                                     const itemStart = moment(item.begin_at);
                                     const itemEnd = moment(item.end_at);
@@ -57,6 +60,7 @@ export function activate() {
                                     return duration.add(itemDuration)
                                 }, moment.duration({}));
 
+                                // Calculate total hours
                                 const totalHours = (totalDuration.days() * 24) + totalDuration.hours();
                                 rtm.sendMessage(`${username} has ` +
                                     `${totalHours} hours and ` +
