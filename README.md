@@ -8,6 +8,8 @@ Instead of being written in Go, MarvinJS is a node server written in ES6 / Javas
 
 We've a staging bot running at Slack https://marvinjs.slack.com/ and on https://marvinjs-staging.herokuapp.com/, join us with improving marvinJS!
 
+[Join us on slack!](https://join.slack.com/t/marvinjs/shared_invite/enQtNTI3NzIwMjYxMDA4LWViMjc3YWIxNTQ5N2ZhMzE2Y2E5Y2I5ZDIyMGY4YjkyMGJlZWRhZTQzZWM0OTAwNDBiMmU0OTFjMjJjNDFlMTY)
+
 ## Features / Goals
 
 As this project is still in early development, here are the goals / features we want to have implemented before we offically suggest to implement this bot in one of the campusses.
