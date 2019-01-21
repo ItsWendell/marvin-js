@@ -21,7 +21,14 @@ export function activate() {
 
         // Only listen to commands which are sent using @user and as a direct message.        
         if (channel.startsWith('D') || text.includes(`<@${rtm.activeUserId}>`)) {
-            const command = text.replace(`<@${rtm.activeUserId}>`, '').trim();
+            var command = text.replace(`<@${rtm.activeUserId}>`, '').trim();
+			
+			// Change first word of command to lower case
+			command = [
+				command.trim().split(' ')[0].toLowerCase(), 
+				...command.trim().split(' ').slice(1))
+			].join(' ');
+			
             commands.parse(command, {
                 message
             }, (err, argv, output) => {
