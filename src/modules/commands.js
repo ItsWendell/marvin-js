@@ -26,7 +26,7 @@ export function activate() {
 			// Change first word of command to lower case
 			command = [
 				command.trim().split(' ')[0].toLowerCase(), 
-				...command.trim().split(' ').slice(1))
+				...command.trim().split(' ').slice(1)
 			].join(' ');
 			
             commands.parse(command, {
