@@ -42,12 +42,19 @@ function registerCommands() {
         .command('ping', 'Pong!', {}, ({ message }) => {
             rtm.sendMessage('Pong!', message.channel);
         })
-        .command('history', 'Show all history logs.', {}, (argv) => {
-            MessageHistory.find({}).exec()
+        .command('history', 'Show all history logs.', {}, ({ message }) => {
+            rtm.sendTyping();
+            MessageHistory.find({ channelId: message.channel }).sort({'date': -1}).limit(20).exec()
                 .then((results) => {
-                    results.forEach((message) => {
-                        rtm.sendMessage(`${message.userId}: ${message.text}`, argv.message.channel);
-                    })
+                    const messages = results.map((message) => {
+                        return (`${message.userId}: ${message.text}`);
+                    }).join('\n');
+                    rtm.sendMessage(
+                        `Latest 20 messages from this channel: \n` +
+                        `_(This is a limited proof of concept, all history will be available in the dashboard soon.)_\n\n` +
+                        messages,
+                        message.channel
+                    );
                 });
         })
         .command('server', 'List basic server / process information.', {}, (argv) => {
