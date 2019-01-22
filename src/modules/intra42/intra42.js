@@ -74,12 +74,15 @@ export function activate() {
                                     return duration.add(itemDuration)
                                 }, moment.duration({}));
 
+                                const activeSession = data.find((item) => !item.end_at);
+
                                 // Calculate total hours
                                 const totalHours = (totalDuration.days() * 24) + totalDuration.hours();
+
                                 rtm.sendMessage(`${username} has ` +
-                                    `${totalHours} hours and ` +
-                                    `${totalDuration.minutes()} minutes ` +
-                                    `logged in this week.`, message.channel);
+                                `${totalHours} hours and ` +
+                                `${totalDuration.minutes()} minutes` +
+                                (activeSession ? ` (Logged in at ${activeSession.host})` : ``), message.channel);
                             }
                         })
                         .catch((error) => {
