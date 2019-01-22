@@ -1,32 +1,21 @@
+import { EventEmitter } from 'events';
 import api from './api-client';
 import oauth2 from 'simple-oauth2';
-import qs from 'querystring';
 
-class Intra42Client {
+class Intra42Client extends EventEmitter {
     constructor(id, secret, host = 'https://api.intra.42.fr') {
-        this.oauth2 = oauth2.create({
-            client: {
-                id: id,
-                secret: secret
-            },
-            auth: {
-                tokenHost: host,
-            }
-        });
-        this.tokens = null;
-    }
+        this.oauth2 = 
 
-    authorizeClient = (config = {}) => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const token = await this.oauth2.clientCredentials.getToken(config);
-                this.tokens = this.oauth2.accessToken.create(token).token;
-                api.updateAccessToken(this.tokens.access_token);
-                resolve(this.tokens);
-            } catch (error) {
-                reject(error);
-            }
-        });
+        // The Simple OAuth2 accessToken helper.
+        this.accessToken = null;
+
+        // Check if we are already refreshing tokens.
+        this.isRefreshingTokens = false;
+
+        // Requests waiting for new token.
+        this.requestBuffer = [];
+
+
     }
 
     getCoalitions() {
