@@ -1,26 +1,19 @@
 import { EventEmitter } from 'events';
-import api from './api-client';
-import oauth2 from 'simple-oauth2';
+import APIOAuthClient from './api-client';
 
 class Intra42Client extends EventEmitter {
     constructor(id, secret, host = 'https://api.intra.42.fr') {
-        this.oauth2 = 
+        super();
+        this.api = new APIOAuthClient(id, secret, host);
+    }
 
-        // The Simple OAuth2 accessToken helper.
-        this.accessToken = null;
-
-        // Check if we are already refreshing tokens.
-        this.isRefreshingTokens = false;
-
-        // Requests waiting for new token.
-        this.requestBuffer = [];
-
-
+    authorizeClient = (config = {}) => {
+        return this.api.authorizeClient(config);
     }
 
     getCoalitions() {
         return new Promise((resolve, reject) => {
-            api.get('/coalitions')
+            this.api.get('/coalitions')
                 .then(({ data }) => {
                     resolve(data);
                 })
@@ -32,7 +25,7 @@ class Intra42Client extends EventEmitter {
 
     getBlocs(params) {
         return new Promise((resolve, reject) => {
-            api.get('/blocs', { params })
+            this.api.get('/blocs', { params })
                 .then(({ data }) => {
                     resolve(data);
                 })
@@ -44,7 +37,7 @@ class Intra42Client extends EventEmitter {
 
     get(path, params = {}) {
         return new Promise((resolve, reject) => {
-            api.get(path, { params })
+            this.api.get(path, { params })
                 .then(({ data }) => {
                     resolve(data);
                 })
