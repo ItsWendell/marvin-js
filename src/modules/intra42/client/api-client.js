@@ -18,16 +18,16 @@ export default class APIOAuthClient extends Axios {
 			},
 			...httpConfig,
 		};
-		super(httpConfig);
+		super(defaultConfig);
 
 		// Setting up OAuth2 client
 		this.oauth2 = oauth2.create({
-            client: {
-                id: clientId,
-                secret: clientSecret,
-            },
-            auth: {
-                tokenHost: tokenHost,
+			client: {
+				id: clientId,
+				secret: clientSecret,
+			},
+			auth: {
+				tokenHost: tokenHost,
 			},
 			...oauthConfig,
 		});
@@ -46,6 +46,8 @@ export default class APIOAuthClient extends Axios {
 		 * @type {import('axios').AxiosStatic[]}
 		 */
 		this.tokenRequestBuffer = [];
+
+		this.setupOAuthInterceptors();
 	}
 
 	/**
@@ -55,15 +57,15 @@ export default class APIOAuthClient extends Axios {
 	 * @returns {Promise<oauth2.AccessToken>}
 	 */
 	authorizeClient = (config = {}) => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const token = await this.oauth2.clientCredentials.getToken(config);
-                this.setAccessToken(this.oauth2.accessToken.create(token));
-                resolve(this.accessToken);
-            } catch (error) {
-                reject(error);
-            }
-        });
+		return new Promise(async (resolve, reject) => {
+			try {
+				const token = await this.oauth2.clientCredentials.getToken(config);
+				this.setAccessToken(this.oauth2.accessToken.create(token));
+				resolve(this.accessToken);
+			} catch (error) {
+				reject(error);
+			}
+		});
 	}
 
 	/**
@@ -71,16 +73,12 @@ export default class APIOAuthClient extends Axios {
 	 *
 	 * @param {oauth2.AccessToken} accessToken
 	 * @return {void}
-	 */	
+	 */
 	setAccessToken = (accessToken = null) => {
 		if (accessToken) {
 			this.accessToken = accessToken;
-		}
-		const { token: { access_token } } = this.accessToken;
-		if (access_token) {
-			this.defaults.headers.common.Authorization = `Bearer ${access_token}`;
 		} else {
-			delete this.defaults.headers.common.Authorization;
+			this.accessToken = this.oauth2.accessToken.create();
 		}
 	}
 
@@ -88,11 +86,17 @@ export default class APIOAuthClient extends Axios {
 	 * Sets up interceptors to automatically renew tokens when nessesary.
 	 */
 	setupOAuthInterceptors = () => {
+		this.interceptors.request.use(request => {
+			const { token: { access_token } } = this.accessToken;
+			request.headers['Authorization'] = `Bearer ${access_token}`;
+			return request;
+		});
+
 		this.interceptors.request.use((response) => {
 			return response;
 		}, (error) => {
 			const requestConfig = error.config;
-		
+
 			if (error.response.status === 401) {
 				if (!this.isRefreshingTokens) {
 					this.isRefreshingTokens = true;
@@ -108,7 +112,7 @@ export default class APIOAuthClient extends Axios {
 							throw error;
 						});
 				}
-		
+
 				return new Promise((resolve, reject) => {
 					this.tokenRequestBuffer.push(access_token => {
 						requestConfig.headers.Authorization = 'Bearer ' + access_token
