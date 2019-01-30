@@ -17,8 +17,9 @@ function registerJobs() {
                 .then(() => {
                     console.log('[KeepAwake]', `Succesfully pinged ${process.env.APP_URL}`);
                 })
-                .catch(() => {
+                .catch((error) => {
                     console.log('[KeepAwake]', `Error pinging ${process.env.APP_URL}`);
+                    throw error;
                 });
     });
 }

@@ -70,18 +70,6 @@ export function register() {
                             throw error;
                         })
                 })
-                .command('auth', 'Reauthenticate the intra 42. (temporary)', {}, ({ message }) => {
-                    client.authorizeClient()
-                        .then((tokens) => {
-                            rtm.sendMessage(`Reauthenticated.`, message.channel);
-                        })
-                        .catch((error) => {
-                            rtm.sendMessage(`Error: ${error.message}`, message.channel)
-                        });
-                })
-                .command('deauth', 'Remove tokens from the intra 42. (temporary)', {}, ({ message }) => {
-                    client.api.setAccessToken({});
-                })
                 .command([
                     'user <username>',
                     'users <username>'

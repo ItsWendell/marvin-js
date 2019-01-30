@@ -93,6 +93,7 @@ dashboard.prepare().then(() => {
       })
       .catch((error) => {
         console.log('[Database]', error.message);
+        throw error;
       });
   });
 });

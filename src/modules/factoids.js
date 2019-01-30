@@ -114,9 +114,6 @@ export function registerCommands() {
                             const commandsString = data.map((item) => item.command).join(', ')
                             rtm.sendMessage(`Factoids available: ${commandsString}`, message.channel);
                         })
-                        .catch((err) => {
-                            console.log(err);
-                        })
                 })
                 .command('run [code..]', 'Run / Test code for factoids. (Upload code as snippet)', {}, ({ _: params, code, message }) => {
                     if (message.files) {
