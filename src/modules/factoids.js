@@ -56,7 +56,8 @@ export function registerCommands() {
                 .demandCommand(1, '')
                 .usage(`Usage: To use a actual factoid, I have to be in the channel and you can say \`!somefactoid\` for example.`)
                 .epilogue(`Hint: Mention me (<@${userId}>) in a channel to invite me!`)
-                .command('create <command> [response]', 'Create factoids using snippets or text responses', {}, async ({ command, response, message, ...argv }) => {
+                .command('create <command> [response..]', 'Create factoids using snippets or text responses', {}, async ({ command, response, message, ...argv }) => {
+                    const responseText = response.join(' ');
                     // Upload snippets to the factoid database.
                     if (message && message.files) {
                         // Filter only javascript snippets which are not truncated .
@@ -87,18 +88,20 @@ export function registerCommands() {
                         else {
                             rtm.sendMessage('You should attach a Javascript snippet / file as code!', message.channel);
                         }
-                    } else if (response && message) {
+                    } else if (responseText && message) {
                         const newFactiod = new Factoid({
                             command: command,
-                            response: response,
+                            response: responseText,
                         });
 
                         try {
                             await newFactiod.save();
-                            rtm.sendMessage('Factiod saved!', message.channel);
+                            rtm.sendMessage(`Factiod \`!${command}\`  saved!`, message.channel);
                         } catch (error) {
                             if (error.name === 'MongoError' && error.code === 11000) {
                                 rtm.sendMessage(`Factoid \`!${command}\` already exists!`, message.channel);
+                            } else {
+                                throw error;
                             }
                         }
                     } else {
