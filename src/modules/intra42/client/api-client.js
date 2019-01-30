@@ -86,14 +86,10 @@ export default class APIOAuthClient extends Axios {
 	 * Sets up interceptors to automatically renew tokens when nessesary.
 	 */
 	setupOAuthInterceptors = () => {
-		this.interceptors.request.use(request => {
+		this.interceptors.request.use((request) => {
 			const { token: { access_token } } = this.accessToken;
 			request.headers['Authorization'] = `Bearer ${access_token}`;
-			return request;
-		});
-
-		this.interceptors.request.use((response) => {
-			return response;
+			return reqest;
 		}, (error) => {
 			const requestConfig = error.config;
 
