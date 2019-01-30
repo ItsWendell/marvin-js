@@ -78,7 +78,7 @@ export default class APIOAuthClient extends Axios {
 		if (accessToken) {
 			this.accessToken = accessToken;
 		} else {
-			this.accessToken = this.oauth2.accessToken.create();
+			this.accessToken = this.oauth2.accessToken.create({});
 		}
 	}
 
@@ -93,20 +93,20 @@ export default class APIOAuthClient extends Axios {
 				return request;
 			}
 			return request;
+		});
+
+		this.interceptors.response.use((response) => {
+			return response;
 		}, (error) => {
 			const { config, response: { status } } = error;
 			const originalRequest = config;
-			console.log('[Intra42 API Client] Request error:', status);
 			if (status === 401) {
-				console.log('[Intra42 API Client] Unauthorized. Is Refreshing tokens?', this.isRefreshingToken);
 				if (!this.isRefreshingToken) {
-					console.log('[Intra42 API Client] Starting to refresh tokens...');
 					this.isRefreshingToken = true;
-					this.accessToken.refresh()
+					this.authorizeClient()
 						.then((accessToken) => {
 							this.setAccessToken(accessToken);
 							this.isRefreshingToken = false;
-							console.log('[Intra42 API Client] Tokens refreshed, queueing requests...');
 							this.tokenRequestBuffer
 								.forEach(request =>
 									request()
@@ -120,8 +120,7 @@ export default class APIOAuthClient extends Axios {
 				return new Promise((resolve, reject) => {
 					this.tokenRequestBuffer.push(() => {
 						const { token: { access_token } } = this.accessToken;
-						request.headers['Authorization'] = `Bearer ${access_token}`;
-						console.log('[Intra42 API Client] Resending tokens with', access_token);
+						originalRequest.headers['Authorization'] = `Bearer ${access_token}`;
 						resolve(this.request(originalRequest));
 					});
 				});

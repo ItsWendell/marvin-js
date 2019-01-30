@@ -1,1 +1,1 @@
-export { default } from './intra42';
+export { default } from './client';

@@ -22,13 +22,13 @@ export function activate() {
         // Only listen to commands which are sent using @user and as a direct message.        
         if (channel.startsWith('D') || text.includes(`<@${rtm.activeUserId}>`)) {
             var command = text.replace(`<@${rtm.activeUserId}>`, '').trim();
-			
-			// Change first word of command to lower case
-			command = [
-				command.trim().split(' ')[0].toLowerCase(), 
-				...command.trim().split(' ').slice(1)
-			].join(' ');
-			
+
+            // Change first word of command to lower case
+            command = [
+                command.trim().split(' ')[0].toLowerCase(),
+                ...command.trim().split(' ').slice(1)
+            ].join(' ');
+
             commands.parse(command, {
                 message
             }, (err, argv, output) => {
@@ -51,7 +51,7 @@ function registerCommands() {
         })
         .command('history', 'Show all history logs.', {}, ({ message }) => {
             rtm.sendTyping();
-            MessageHistory.find({ channelId: message.channel }).sort({'date': -1}).limit(20).exec()
+            MessageHistory.find({ channelId: message.channel }).sort({ 'date': -1 }).limit(20).exec()
                 .then((results) => {
                     const messages = results.map((message) => {
                         return (`${message.userId}: ${message.text}`);
@@ -75,6 +75,24 @@ function registerCommands() {
                 `Uptime: ${uptimeString}\n` +
                 `RSS Memory: ${rssMB} MB\n`;
             rtm.sendMessage(stats, argv.message.channel);
+        })
+        .command('slack', 'Fetch basic information about slack.', (yargs) => {
+            return yargs
+                .showHelpOnFail(true)
+                .demandCommand(1, '')
+                .usage(`Info: Might be useful for creating factoids or debugging.`)
+                .command([
+                    'whoami',
+                    'me',
+                ], 'Your slack user id', {}, ({ message }) => {
+                    rtm.sendMessage(`Hi <@${message.user}>, your slack user id is: ${message.user}`, message.channel);
+                })
+                .command([
+                    'whereami',
+                    'channel',
+                ], 'Current slack channel id', {}, ({ message }) => {
+                    rtm.sendMessage(`You're in <#${message.channel}>, this slack channel id is: ${message.channel}`, message.channel);
+                })
         })
         .command('*', false, {}, ({ message }) => {
             rtm.sendMessage('What do you mean? Don\'t talk to me about life.', message.channel);

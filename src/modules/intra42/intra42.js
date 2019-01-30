@@ -81,7 +81,8 @@ export function activate() {
 
                                 rtm.sendMessage(`${username} has ` +
                                 `${totalHours} hours and ` +
-                                `${totalDuration.minutes()} minutes` +
+                                `${totalDuration.minutes()} minutes ` +
+                                `logged this week.` +
                                 (
                                     activeSession ? 
                                         ` (Logged in at ${activeSession.host})` :
@@ -91,6 +92,7 @@ export function activate() {
                         })
                         .catch((error) => {
                             rtm.sendMessage(`Something went wrong: ${error.message}`, message.channel);
+                            throw error;
                         })
                 })
                 .command('auth', 'Reauthenticate the intra 42. (temporary)', {}, ({ message }) => {
@@ -101,6 +103,9 @@ export function activate() {
                         .catch((error) => {
                             rtm.sendMessage(`Error: ${error.message}`, message.channel)
                         });
+                })
+                .command('deauth', 'Remove tokens from the intra 42. (temporary)', {}, ({ message }) => {
+                    client.api.setAccessToken({});
                 })
                 .command([
                     'user <username>',
