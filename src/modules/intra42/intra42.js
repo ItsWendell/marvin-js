@@ -87,7 +87,6 @@ export function activate() {
                         })
                         .catch((error) => {
                             rtm.sendMessage(`Something went wrong: ${error.message}`, message.channel);
-                            console.log('error', error);
                         })
                 })
                 .command('auth', 'Reauthenticate the intra 42.', {}, ({ message }) => {

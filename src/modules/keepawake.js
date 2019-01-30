@@ -14,11 +14,11 @@ function registerJobs() {
         console.log('[KeepAwake]', `Pinging ${process.env.APP_URL}...`);
         axios
             .get(process.env.APP_URL)
-            .then(() => {
-                console.log('[KeepAwake]', `Succesfully pinged ${process.env.APP_URL}`);
-            })
-            .catch(() => {
-                console.log('[KeepAwake]', `Error pinging ${process.env.APP_URL}`);
-            });
+                .then(() => {
+                    console.log('[KeepAwake]', `Succesfully pinged ${process.env.APP_URL}`);
+                })
+                .catch(() => {
+                    console.log('[KeepAwake]', `Error pinging ${process.env.APP_URL}`);
+                });
     });
 }

@@ -98,14 +98,17 @@ export default class APIOAuthClient extends Axios {
 			const requestConfig = error.config;
 
 			if (error.response.status === 401) {
+				console.log('Ohoh 401 Oauth error.');
 				if (!this.isRefreshingTokens) {
+					console.log('Trying to auto refresh..');
 					this.isRefreshingTokens = true;
 					this.accessToken.refresh()
 						.then((accessToken) => {
 							this.setAccessToken(accessToken);
 							this.isRefreshingToken = false;
+							console.log('refreshed token.');
 							this.tokenRequestBuffer.forEach(request =>
-								request(this.accessToken.access_token)
+								request()
 							);
 						})
 						.catch((error) => {
@@ -114,8 +117,10 @@ export default class APIOAuthClient extends Axios {
 				}
 
 				return new Promise((resolve, reject) => {
-					this.tokenRequestBuffer.push(access_token => {
-						requestConfig.headers.Authorization = 'Bearer ' + access_token
+					this.tokenRequestBuffer.push(() => {
+						const { token: { access_token } } = this.accessToken;
+						request.headers['Authorization'] = `Bearer ${access_token}`;
+						console.log('Resending tokens with', access_token);
 						resolve(this.request(requestConfig));
 					});
 				});
