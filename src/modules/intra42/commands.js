@@ -1,4 +1,7 @@
+import moment from 'moment';
 import commands from '../../providers/commands';
+import { client } from './intra42';
+import { rtm } from '../../slack';
 
 export function register() {
     commands
