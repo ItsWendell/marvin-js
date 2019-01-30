@@ -87,8 +87,11 @@ export default class APIOAuthClient extends Axios {
 	 */
 	setupOAuthInterceptors = () => {
 		this.interceptors.request.use((request) => {
-			const { token: { access_token } } = this.accessToken;
-			request.headers['Authorization'] = `Bearer ${access_token}`;
+			if (this.accessToken && this.accessToken.token) {
+				const { token: { access_token } } = this.accessToken;
+				request.headers['Authorization'] = `Bearer ${access_token}`;
+				return request;
+			}
 			return request;
 		}, (error) => {
 			const { config, response: { status } } = error;

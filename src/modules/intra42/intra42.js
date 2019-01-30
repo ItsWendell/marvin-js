@@ -37,7 +37,7 @@ export function activate() {
                 .command('coalitions', 'Coalition commands of the 42 network.', {}, ({ message }) => {
                     sendCoalitionStats(message.channel);
                 })
-                .command('hours <username>', 'Return accurate checked in hours of an this week.', {}, ({ message, username, f: full }) => {
+                .command('hours <username>', 'Return accurate checked in hours of an user this week.', {}, ({ message, username, f: full }) => {
                     const weekStart = moment().utc().startOf('isoWeek');
                     const weekEnd = moment().utc().endOf('isoWeek');
 
@@ -82,14 +82,18 @@ export function activate() {
                                 rtm.sendMessage(`${username} has ` +
                                 `${totalHours} hours and ` +
                                 `${totalDuration.minutes()} minutes` +
-                                (activeSession ? ` (Logged in at ${activeSession.host})` : ``), message.channel);
+                                (
+                                    activeSession ? 
+                                        ` (Logged in at ${activeSession.host})` :
+                                        ` (Last seen: ${moment.utc(data[0].end_at).fromNow()})`
+                                ), message.channel);
                             }
                         })
                         .catch((error) => {
                             rtm.sendMessage(`Something went wrong: ${error.message}`, message.channel);
                         })
                 })
-                .command('auth', 'Reauthenticate the intra 42.', {}, ({ message }) => {
+                .command('auth', 'Reauthenticate the intra 42. (temporary)', {}, ({ message }) => {
                     client.authorizeClient()
                         .then((tokens) => {
                             rtm.sendMessage(`Reauthenticated.`, message.channel);
@@ -97,6 +101,27 @@ export function activate() {
                         .catch((error) => {
                             rtm.sendMessage(`Error: ${error.message}`, message.channel)
                         });
+                })
+                .command([
+                    'user <username>',
+                    'users <username>'
+                ], 'Get basic user information.', {}, ({ message, username }) => {
+                    client
+                        .getUser(username)
+                        .then((user) => {
+                            const courses = user.cursus_users
+                                .map((cursusUser) => (
+                                    `${cursusUser.cursus.name}: ${moment.utc(cursusUser.begin_at).format('LL')}` +
+                                    ` (Lvl: ${cursusUser.level})`
+                                ))
+                                .join('\n');
+                            const result = 
+                                `${user.displayname} (${username}) (${user.pool_month} ${user.pool_year})\n` +
+                                `Wallet: ${user.wallet}\n` +
+                                `Courses:\n${courses}`;
+                            
+                            rtm.sendMessage(result, message.channel);
+                        })
                 })
         })
 

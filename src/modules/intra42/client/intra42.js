@@ -35,6 +35,10 @@ class Intra42Client extends EventEmitter {
         });
     }
 
+    getUser(userId) {
+        return this.get(`/users/${userId}`);
+    }
+
     get(path, params = {}) {
         return new Promise((resolve, reject) => {
             this.api.get(path, { params })
