@@ -38,9 +38,9 @@ export default class APIOAuthClient extends Axios {
 		/** 
 		 * Checks if access token is being refreshed.
 		 * 
-		 * @type {boolean} 
+		 * @type {boolean}
 		 */
-		this.isRefreshingToken = null;
+		this.isRefreshingToken = false;
 
 		/**
 		 * @type {import('axios').AxiosStatic[]}
@@ -91,21 +91,23 @@ export default class APIOAuthClient extends Axios {
 			request.headers['Authorization'] = `Bearer ${access_token}`;
 			return request;
 		}, (error) => {
-			const requestConfig = error.config;
-			console.log('request error', error.response);
-			if (error.response.status === 401) {
-				console.log('Ohoh 401 Oauth error.');
-				if (!this.isRefreshingTokens) {
-					console.log('Trying to auto refresh..');
-					this.isRefreshingTokens = true;
+			const { config, response: { status } } = error;
+			const originalRequest = config;
+			console.log('[Intra42 API Client] Request error:', status);
+			if (status === 401) {
+				console.log('[Intra42 API Client] Unauthorized. Is Refreshing tokens?', this.isRefreshingToken);
+				if (!this.isRefreshingToken) {
+					console.log('[Intra42 API Client] Starting to refresh tokens...');
+					this.isRefreshingToken = true;
 					this.accessToken.refresh()
 						.then((accessToken) => {
 							this.setAccessToken(accessToken);
 							this.isRefreshingToken = false;
-							console.log('refreshed token.');
-							this.tokenRequestBuffer.forEach(request =>
-								request()
-							);
+							console.log('[Intra42 API Client] Tokens refreshed, queueing requests...');
+							this.tokenRequestBuffer
+								.forEach(request =>
+									request()
+								);
 						})
 						.catch((error) => {
 							throw error;
@@ -116,8 +118,8 @@ export default class APIOAuthClient extends Axios {
 					this.tokenRequestBuffer.push(() => {
 						const { token: { access_token } } = this.accessToken;
 						request.headers['Authorization'] = `Bearer ${access_token}`;
-						console.log('Resending tokens with', access_token);
-						resolve(this.request(requestConfig));
+						console.log('[Intra42 API Client] Resending tokens with', access_token);
+						resolve(this.request(originalRequest));
 					});
 				});
 			}
