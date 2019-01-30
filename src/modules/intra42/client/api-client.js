@@ -92,7 +92,7 @@ export default class APIOAuthClient extends Axios {
 			return reqest;
 		}, (error) => {
 			const requestConfig = error.config;
-
+			console.log('request error', error.response);
 			if (error.response.status === 401) {
 				console.log('Ohoh 401 Oauth error.');
 				if (!this.isRefreshingTokens) {
