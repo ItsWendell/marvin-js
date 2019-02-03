@@ -94,5 +94,30 @@ export function register() {
                             rtm.sendMessage(result, message.channel);
                         })
                 })
+                .command('online', 'List all the people currently logged in.', {}, ({ message }) => {
+                    if (!process.env.INTRA42_CAMPUS_ID) {
+                        rtm.sendMessage('Primary campus ID is not set.', message.channel);
+                    }
+
+                    client
+                        .get(`/campus/${process.env.INTRA42_CAMPUS_ID}/locations`, {
+                            filter: {
+                                active: true,
+                            }
+                        })
+                        .then((data) => {
+                            const count = data.length;
+                            const response = `There are currently ${count} users online in our campus!\n`;
+
+                            const results = data.map(({ user, host }) => {
+                                return `${user.login}: ${host}`;
+                            }).join('\n');
+
+                            rtm.sendMessage(response.concat(results), message.channel);
+                        })
+                })
+                .command('*', false, {}, ({ message }) => {
+                    rtm.sendMessage('What do you mean? Don\'t talk to me about life.', message.channel);
+                });
         })
 }
