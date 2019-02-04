@@ -62,7 +62,7 @@ class Intra42Client extends EventEmitter {
                     const { data, headers } = await this.api.get(url, { params });
                     allData = allData.concat(data);
                     const links = parseLinkHeader(headers.link);
-                    if (links.next && links.next.url) {
+                    if (links && links.next && links.next.url) {
                         url = links.next.url;
                     } else {
                         url = false;
