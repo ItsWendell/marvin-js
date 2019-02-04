@@ -95,7 +95,7 @@ export function register() {
                         })
                 })
                 .command('online', 'List all the people currently logged in.', {}, ({ message }) => {
-                    if (!process.env.INTRA42_CAMPUS_ID) {
+                    if (!client.primaryCampusId) {
                         rtm.sendMessage('Primary campus ID is not set.', message.channel);
                     }
 

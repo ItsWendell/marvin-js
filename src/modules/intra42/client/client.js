@@ -6,6 +6,7 @@ class Intra42Client extends EventEmitter {
     constructor(id, secret, host = 'https://api.intra.42.fr') {
         super();
         this.api = new APIOAuthClient(id, secret, host);
+		this.primaryCampusId = process.env.INTRA42_CAMPUS_ID;ß
     }
 
     authorizeClient = (config = {}) => {
