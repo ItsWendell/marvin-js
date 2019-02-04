@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import * as Sentry from '@sentry/node';
 import express from 'express';
+import './providers/prototypes';
 
 import { rtm, routes as SlackRoutes } from './slack';
 import dashboard from './dashboard';

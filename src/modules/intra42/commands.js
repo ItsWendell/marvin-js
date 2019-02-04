@@ -100,20 +100,23 @@ export function register() {
                     }
 
                     client
-                        .get(`/campus/${process.env.INTRA42_CAMPUS_ID}/locations`, {
+                        .getAll(`/campus/${process.env.INTRA42_CAMPUS_ID}/locations`, {
                             filter: {
                                 active: true,
-                            }
+                            },
+                            per_page: 100,
                         })
                         .then((data) => {
                             const count = data.length;
                             const response = `There are currently ${count} users online in our campus!\n`;
-
                             const results = data.map(({ user, host }) => {
-                                return `${user.login}: ${host}`;
-                            }).join('\n');
+                                return `<https://profile.intra.42.fr/users/${user.login}|${user.login}>`;
+                            });
 
-                            rtm.sendMessage(response.concat(results), message.channel);
+                            rtm.sendMessage(response, message.channel);
+                            results.chunk(50).forEach((items) => {
+                                rtm.sendMessage(items.join(', '), message.channel);
+                            });
                         })
                 })
                 .command('*', false, {}, ({ message }) => {

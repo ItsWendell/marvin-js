@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
 import APIOAuthClient from './api-client';
+import parseLinkHeader from 'parse-link-header';
 
 class Intra42Client extends EventEmitter {
     constructor(id, secret, host = 'https://api.intra.42.fr') {
@@ -49,6 +50,29 @@ class Intra42Client extends EventEmitter {
                     reject(error);
                 });
         });
+    }
+
+    getAll(path, params = {}) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let allData = [];
+                const loopPages = true;
+                let url = path;
+                while (url) {
+                    const { data, headers } = await this.api.get(url, { params });
+                    allData = allData.concat(data);
+                    const links = parseLinkHeader(headers.link);
+                    if (links.next && links.next.url) {
+                        url = links.next.url;
+                    } else {
+                        url = false;
+                    }
+                }
+                resolve(allData);
+            } catch (error) {
+                reject(error);
+            }
+        })
     }
 }
 
