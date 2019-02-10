@@ -125,6 +125,11 @@ export default class APIOAuthClient extends Axios {
 					});
 				});
 			}
+			else if (status === 429) {
+				new Promise(resolve => setTimeout(resolve, 500)).then(() => {
+					resolve(this.request(originalRequest));
+				})
+			}
 			return Promise.reject(error);
 		});
 	}
