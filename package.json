@@ -1,6 +1,7 @@
 {
   "name": "marvinjs",
   "version": "0.1.0",
+  "private": true,
   "description": "A campus / community slack bot designed for 42 and relative campuses.",
   "main": "build/server.js",
   "scripts": {
@@ -10,7 +11,10 @@
     "heroku-postbuild": "npm run build",
     "start": "NODE_ENV=production node src/index.js -p $PORT",
     "lint": "eslint src/",
-    "lint:fix": "eslint --fix src/"
+    "lint:commit": "commitlint .",
+    "lint:fix": "eslint --fix src/",
+    "release": "semantic-release",
+    "release-local": "node -r dotenv/config node_modules/semantic-release/bin/semantic-release --no-ci --dry-run"
   },
   "dependencies": {
     "@babel/cli": "^7.2.3",
@@ -41,8 +45,12 @@
     "yargs": "^12.0.5"
   },
   "devDependencies": {
+    "@commitlint/cli": "^7.5.1",
+    "@commitlint/config-conventional": "^7.5.0",
     "babel-eslint": "^9.0.0",
     "babel-preset-airbnb": "^3.2.0",
+    "commit": "git-cz",
+    "cz-conventional-changelog": "2.1.0",
     "eslint": "^5.13.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^4.0.0",
@@ -53,7 +61,9 @@
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-react": "^7.12.4",
     "nodemon": "^1.18.10",
-    "prettier": "^1.16.4"
+    "prettier": "^1.16.4",
+    "semantic-release": "^15.13.3",
+    "standard-version": "^4.4.0"
   },
   "babel": {
     "presets": [
@@ -68,6 +78,16 @@
   "nodemonConfig": {
     "ignore": [
       "src/dashboard/*"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
     ]
   }
 }
