@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import * as Sentry from '@sentry/node';
 import express from 'express';
-import './providers/prototypes';
 
 import { rtm, routes as SlackRoutes } from './slack';
 import dashboard from './dashboard';
@@ -25,7 +24,7 @@ if (process.env.SENTRY_DNS) {
 }
 
 // We want to continue to run the server when asynchronous code fails
-process.on('uncaughtException', (err) => {
+process.on('uncaughtException', err => {
   console.error('[Server] Asynchronous error caught:', err.message);
 });
 
@@ -35,15 +34,13 @@ function loadModules() {
   // Disable certain modules within the environment file
   if (process.env.DISABLED_MODULES) {
     const disabledModules = (process.env.DISABLED_MODULES || '').split(',');
-    const activateModules = disabledModules.filter((module) => (
-      !disabledModules.includes(module)
-    ));
+    activateModules = disabledModules.filter(module => !disabledModules.includes(module));
     console.log('[Modules] Disabled Modules: ', disabledModules);
   }
 
   // Activate exported modules by key
-  activateModules.forEach((key) => {
-    if (typeof modules[key].activate === "function") {
+  activateModules.forEach(key => {
+    if (typeof modules[key].activate === 'function') {
       try {
         modules[key].activate();
         console.log('[Modules] Activated module', key);
@@ -68,7 +65,7 @@ dashboard.prepare().then(() => {
    * Return our nextJS dashboard pages.
    */
   server.get('*', (req, res) => {
-    return handle(req, res)
+    return handle(req, res);
   });
 
   /**
@@ -76,14 +73,15 @@ dashboard.prepare().then(() => {
    */
   server.use((err, req, res, next) => {
     res.statusCode = 500;
-    res.end(res.sentry + '\n');
+    res.end(`${res.sentry}\n`);
   });
 
   server.listen(port, err => {
     if (err) throw err;
     console.log(`[Server] Ready on http://localhost:${port}`);
     // Connect to MongoDB
-    database.connect()
+    database
+      .connect()
       .then(() => {
         console.log('[Database] Connected to', database.db);
         // Connect to Slack Real Time Chat
@@ -92,10 +90,9 @@ dashboard.prepare().then(() => {
           loadModules();
         });
       })
-      .catch((error) => {
+      .catch(error => {
         console.log('[Database]', error.message);
         throw error;
       });
   });
 });
-

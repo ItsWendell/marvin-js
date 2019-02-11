@@ -13,36 +13,37 @@ export default class extends Component {
       const history = await models.MessageHistory.find(params).exec();
       return { history };
     }
+    return {};
   }
 
   renderHistoryTable() {
     const { history } = this.props;
 
-    const data = history.map((item) => ({
+    const data = history.map(item => ({
       key: item._id,
       ...item
     }));
 
-    const columns = [{
-      title: 'Time',
-      dataIndex: 'timeString',
-      key: 'timeString',
-      render: (text, record, index) => (
-        <p>{moment.unix(record.timeString).toLocaleString()}</p>
-      )
-    }, {
-      title: 'User',
-      dataIndex: 'userId',
-      key: 'userId',
-    }, {
-      title: 'Message',
-      dataIndex: 'text',
-      key: 'text',
-    }];
+    const columns = [
+      {
+        title: 'Time',
+        dataIndex: 'timeString',
+        key: 'timeString',
+        render: (text, record, index) => <p>{moment.unix(record.timeString).toLocaleString()}</p>
+      },
+      {
+        title: 'User',
+        dataIndex: 'userId',
+        key: 'userId'
+      },
+      {
+        title: 'Message',
+        dataIndex: 'text',
+        key: 'text'
+      }
+    ];
 
-    return (
-      <Table dataSource={data} columns={columns} />
-    )
+    return <Table dataSource={data} columns={columns} />;
   }
 
   render() {
@@ -52,6 +53,6 @@ export default class extends Component {
         <h1>Messages: #{history.length} :D</h1>
         {this.renderHistoryTable()}
       </Layout>
-    )
+    );
   }
 }
