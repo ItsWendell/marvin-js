@@ -85,7 +85,7 @@ dashboard.prepare().then(() => {
     // Connect to MongoDB
     database.connect()
       .then(() => {
-        console.log('[Database] Connected to', database.host);
+        console.log('[Database] Connected to', database.db);
         // Connect to Slack Real Time Chat
         rtm.start().then(() => {
           // Load MarvinJS modules
