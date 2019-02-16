@@ -31,8 +31,12 @@ steps:
     branch:
     - master
     - develop
-    when:
-      push
+    event:
+      include:
+      - push
+      exclude:
+      - pull_request
+
 
 - name: release
   image: node
