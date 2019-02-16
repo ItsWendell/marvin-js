@@ -1,6 +1,6 @@
 {
   "name": "marvinjs",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "A campus / community slack bot designed for 42 and relative campuses.",
   "repository": {
@@ -18,7 +18,7 @@
     "lint:commit": "commitlint . --from=e37b88b806e806a0a599e843247666fc3959707c",
     "lint:fix": "eslint --fix src/",
     "release": "npx -n='-r dotenv/config' semantic-release",
-    "release:local": "node -r dotenv/config node_modules/semantic-release/bin/semantic-release --no-ci --dry-run"
+    "release:local": "node -r dotenv/config node_modules/semantic-release/bin/semantic-release --no-ci"
   },
   "dependencies": {
     "@babel/cli": "^7.2.3",
