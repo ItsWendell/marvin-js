@@ -1,35 +1,34 @@
 kind: pipeline
-name: default
+name: Install Test & Build
 when:
   event:
   - push
 
 steps:
+- name: install
+  image: node
+  volumes:
+  - name: node
+    path: /tmp/node
+  commands:
+  - npm audit
+  - npm ci
+  when:
+    event:
+    - push
+
 - name: lint
   image: node
   volumes:
   - name: node
     path: /tmp/node
   commands:
-  - npm ci
   - npm run lint
-  - npm audit
   when:
     event:
     - push
 
-- name: build
-  image: node
-  volumes:
-  - name: node
-    path: /tmp/node
-  commands:
-  - npm run build
-  when:
-    event:
-    - push
-
-- name: commitlint
+- name: lint:commit
   image: node
   volumes:
   - name: node
@@ -43,6 +42,16 @@ steps:
     event:
     - push
 
+- name: build
+  image: node
+  volumes:
+  - name: node
+    path: /tmp/node
+  commands:
+  - npm run build
+  when:
+    event:
+    - push
 
 - name: release
   image: node
