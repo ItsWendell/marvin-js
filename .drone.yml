@@ -18,7 +18,7 @@ steps:
   - name: node
     path: /tmp/node
   commands:
-  - npm build
+  - npm run build
 
 - name: commitlint
   image: node
