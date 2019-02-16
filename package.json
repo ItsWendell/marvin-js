@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "description": "A campus / community slack bot designed for 42 and relative campuses.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ItsWendell/marvin-js"
+  },
   "main": "build/server.js",
   "scripts": {
     "dev": "nodemon src/",
@@ -49,7 +53,6 @@
     "@commitlint/config-conventional": "^7.5.0",
     "babel-eslint": "^9.0.0",
     "babel-preset-airbnb": "^3.2.0",
-    "commit": "git-cz",
     "cz-conventional-changelog": "2.1.0",
     "eslint": "^5.13.0",
     "eslint-config-airbnb": "^17.1.0",

@@ -1,0 +1,56 @@
+kind: pipeline
+name: default
+
+steps:
+- name: lint
+  image: node
+  volumes:
+  - name: node
+    path: /tmp/node
+  commands:
+  - npm ci
+  - npm run lint
+  - npm audit
+
+- name: build
+  image: node
+  volumes:
+  - name: node
+    path: /tmp/node
+  commands:
+  - npm build
+
+- name: commitlint
+  image: node
+  volumes:
+  - name: node
+    path: /tmp/node
+  commands:
+  - npm run lint:commit
+  when:
+    branch:
+    - master
+    - develop
+
+- name: commitlint
+  image: node
+  volumes:
+  - name: node
+    path: /tmp/node
+  commands:
+  - npm run lint:commit
+  when:
+    branch:
+    - master
+    - develop
+
+- name: release
+  image: node
+  volumes:
+  - name: node
+    path: /tmp/node
+  commands:
+  - npm run release
+  when:
+    branch:
+    - master
