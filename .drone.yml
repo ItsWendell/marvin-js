@@ -1,5 +1,8 @@
 kind: pipeline
 name: default
+when:
+  event:
+  - push
 
 steps:
 - name: lint
