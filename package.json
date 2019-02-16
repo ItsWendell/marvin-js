@@ -1,48 +1,77 @@
 {
   "name": "marvinjs",
   "version": "0.1.0",
+  "private": true,
   "description": "A campus / community slack bot designed for 42 and relative campuses.",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ItsWendell/marvin-js.git"
+  },
   "main": "build/server.js",
   "scripts": {
     "dev": "nodemon src/",
     "build": "npm run build:next",
     "build:next": "next build src/dashboard",
     "heroku-postbuild": "npm run build",
-    "start": "NODE_ENV=production node src/index.js -p $PORT"
+    "start": "NODE_ENV=production node src/index.js -p $PORT",
+    "lint": "eslint src/",
+    "lint:commit": "commitlint . --from=e37b88b806e806a0a599e843247666fc3959707c",
+    "lint:fix": "eslint --fix src/",
+    "release": "npx -n='-r dotenv/config' semantic-release",
+    "release:local": "node -r dotenv/config node_modules/semantic-release/bin/semantic-release --no-ci --dry-run"
   },
   "dependencies": {
     "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.2.2",
+    "@babel/core": "^7.3.3",
     "@babel/node": "^7.2.2",
-    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-env": "^7.3.1",
     "@babel/register": "^7.0.0",
-    "@sentry/node": "^4.5.2",
-    "@slack/client": "^4.8.0",
+    "@sentry/node": "^4.6.1",
+    "@slack/client": "^4.9.0",
     "@zeit/next-less": "^1.0.1",
-    "antd": "^3.12.3",
+    "antd": "^3.13.2",
     "axios": "^0.18.0",
     "dotenv": "^6.2.0",
     "express": "^4.14.0",
     "less": "^3.9.0",
-    "moment": "^2.23.0",
-    "mongodb": "^3.1.12",
-    "mongoose": "^5.4.5",
-    "next": "^7.0.2",
-    "node-schedule": "^1.3.1",
+    "moment": "^2.24.0",
+    "mongodb": "^3.1.13",
+    "mongoose": "^5.4.13",
+    "next": "^7.0.3",
+    "node-schedule": "^1.3.2",
     "parse-link-header": "^1.0.1",
     "qs": "^6.6.0",
     "raven": "^2.6.4",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
+    "react": "^16.8.2",
+    "react-dom": "^16.8.2",
     "simple-oauth2": "^2.2.1",
-    "vm2": "^3.6.6",
+    "vm2": "^3.6.10",
     "yargs": "^12.0.5"
   },
   "devDependencies": {
-    "nodemon": "^1.18.9"
+    "@commitlint/cli": "^7.5.2",
+    "@commitlint/config-conventional": "^7.5.0",
+    "@peakfijn/config-commitlint": "^1.0.0-rc.3",
+    "@peakfijn/config-release": "^1.0.0-rc.3",
+    "babel-eslint": "^9.0.0",
+    "babel-preset-airbnb": "^3.2.0",
+    "cz-conventional-changelog": "2.1.0",
+    "eslint": "^5.14.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^4.0.0",
+    "eslint-config-react-app": "^3.0.7",
+    "eslint-plugin-flowtype": "^2.50.3",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-prettier": "^3.0.1",
+    "eslint-plugin-react": "^7.12.4",
+    "nodemon": "^1.18.10",
+    "prettier": "^1.16.4",
+    "semantic-release": "^15.13.3"
   },
   "babel": {
     "presets": [
+      "airbnb",
       "@babel/preset-env",
       "next/babel"
     ],
@@ -54,5 +83,18 @@
     "ignore": [
       "src/dashboard/*"
     ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "@peakfijn/config-commitizen"
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@peakfijn/config-commitlint"
+    ]
+  },
+  "release": {
+    "extends": "@peakfijn/config-release"
   }
 }

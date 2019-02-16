@@ -1,0 +1,67 @@
+kind: pipeline
+name: Install Test & Build
+when:
+  event:
+  - push
+
+steps:
+- name: install
+  image: node
+  volumes:
+  - name: node
+    path: /tmp/node
+  commands:
+  - npm audit
+  - npm ci
+  when:
+    event:
+    - push
+
+- name: lint
+  image: node
+  volumes:
+  - name: node
+    path: /tmp/node
+  commands:
+  - npm run lint
+  when:
+    event:
+    - push
+
+- name: lint:commit
+  image: node
+  volumes:
+  - name: node
+    path: /tmp/node
+  commands:
+  - npm run lint:commit
+  when:
+    branch:
+    - master
+    - develop
+    event:
+    - push
+
+- name: build
+  image: node
+  volumes:
+  - name: node
+    path: /tmp/node
+  commands:
+  - npm run build
+  when:
+    event:
+    - push
+
+- name: release
+  image: node
+  volumes:
+  - name: node
+    path: /tmp/node
+  commands:
+  - npm run release
+  when:
+    branch:
+    - master
+    event:
+    - push

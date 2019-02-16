@@ -1,12 +1,11 @@
-import { web, rtm } from '../../slack';
-import command from '../commands';
+import { rtm } from '../../slack';
 
 export default class AppContext {
-    constructor(message = {}) {
-        this.message = message;
-    }
+  constructor(message = {}) {
+    this.message = message;
+  }
 
-    sendMessage = (text) => {
-        rtm.sendMessage(text, this.message.channel);
-    }
+  sendMessage = text => {
+    rtm.sendMessage(text, this.message.channel);
+  };
 }
