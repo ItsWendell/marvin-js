@@ -11,6 +11,11 @@ steps:
   - npm ci
   - npm run lint
   - npm audit
+  event:
+    include:
+    - push
+    exclude:
+    - pull_request
 
 - name: build
   image: node
@@ -19,6 +24,11 @@ steps:
     path: /tmp/node
   commands:
   - npm run build
+  event:
+    include:
+    - push
+    exclude:
+    - pull_request
 
 - name: commitlint
   image: node
@@ -48,3 +58,6 @@ steps:
   when:
     branch:
     - master
+    event:
+      include:
+        - push
