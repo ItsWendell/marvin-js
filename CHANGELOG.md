@@ -1,3 +1,15 @@
+## [1.0.1](https://github.com/ItsWendell/marvin-js/compare/1.0.0...1.0.1) (2019-02-16)
+
+
+### Bug fixes
+
+* not properly running in production ([e42d1d6](https://github.com/ItsWendell/marvin-js/commit/e42d1d6))
+
+
+### Documentation changes
+
+* update readme with release and build shields ([0587949](https://github.com/ItsWendell/marvin-js/commit/0587949))
+
 # 1.0.0 (2019-02-16)
 
 
