@@ -4,6 +4,9 @@ MarvinJS is a campus Slack bot for the Encole 42 college network, inspired by [M
 
 Instead of being written in Go, MarvinJS is a node server written in ES6 / Javascript with a server-side rendered NextJS dashboard.
 
+[![Build Status](https://cloud.drone.io/api/badges/ItsWendell/marvin-js/status.svg)](https://cloud.drone.io/ItsWendell/marvin-js)
+![Release Version(https://github.com/ItsWendell/marvin-js/releases)](https://img.shields.io/github/release/ItsWendell/marvin-js.svg?style=flat)
+
 ## Deploy
 
 We've setup a installation script for heroku to simply deploy your own community slack bot.
