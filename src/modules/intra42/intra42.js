@@ -40,7 +40,9 @@ export function sendCoalitionStats(channelId = null) {
       try {
         if (!channel) {
           const { channels } = await web.channels.list();
-          const generalChannel = channels.find(item => !!item.is_general);
+          const generalChannel =
+            channels.find(item => !!item.is_general) ||
+            channels.find(item => item.name === 'general');
 
           if (!generalChannel) {
             throw new Error('[Job: coalitionUpdate] general ChannelId not found');

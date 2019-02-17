@@ -83,7 +83,7 @@ dashboard.prepare().then(() => {
     database
       .connect()
       .then(() => {
-        console.log('[Database] Connected to', database.db);
+        console.log('[Database] Connected to database', database.db.databaseName);
         // Connect to Slack Real Time Chat
         rtm.start().then(() => {
           // Load MarvinJS modules

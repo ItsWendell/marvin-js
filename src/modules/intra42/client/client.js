@@ -64,10 +64,11 @@ class Intra42Client extends EventEmitter {
           // eslint-disable-next-line no-await-in-loop
           const { data, headers } = await this.api.get(url, { params });
           allData = allData.concat(data);
-          const {
-            next: { url: next }
-          } = parseLinkHeader(headers.link);
-          if (next) {
+
+          const linkHeader = parseLinkHeader(headers.link);
+
+          if (linkHeader && linkHeader.next && linkHeader.next.url) {
+            const { url: next } = linkHeader.next;
             url = next;
           } else {
             url = false;
