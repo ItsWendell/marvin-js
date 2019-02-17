@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/ItsWendell/marvin-js/compare/1.0.1...1.0.2) (2019-02-17)
+
+
+### Bug fixes
+
+* database connected log, getAll request headers, coalitions job channel ([f32d479](https://github.com/ItsWendell/marvin-js/commit/f32d479))
+
 ## [1.0.1](https://github.com/ItsWendell/marvin-js/compare/1.0.0...1.0.1) (2019-02-16)
 
 
