@@ -5,6 +5,8 @@ import { rtm } from '../slack';
 
 import Factoid, { FactoidTypes } from '../database/models/factoid';
 
+export const keywordBlacklist = ['while', 'loop', 'for'];
+
 export const factoidCommands = Yargs()
   .usage('usage: $0 !<command>')
   .scriptName('')
@@ -77,13 +79,16 @@ export function registerCommands() {
             if (snippets.length) {
               const snippet = snippets[0];
               try {
+                if (new RegExp(keywordBlacklist.join('|')).test(snippet.preview)) {
+                  throw new Error(`Used a blacklisted keyword: ${keywordBlacklist.join(', ')}`);
+                }
                 const newFactoid = new Factoid({
                   command,
                   type: FactoidTypes.Javascript,
                   response: snippet.preview
                 });
 
-                await vm.runScriptContext(snippet);
+                await vm.runScriptContext(snippet.preview);
                 await newFactoid.save();
                 rtm.sendMessage('Factiod saved!', message.channel);
               } catch (error) {
@@ -136,22 +141,32 @@ export function registerCommands() {
         'Run / Test code for factoids. (Upload code as snippet)',
         {},
         ({ _: params, code, message }) => {
-          if (message.files) {
-            const snippets = message.files.filter(
-              file => file.filetype === 'javascript' && file.preview_is_truncated === false
-            );
+          try {
+            if (message.files) {
+              const snippets = message.files.filter(
+                file => file.filetype === 'javascript' && file.preview_is_truncated === false
+              );
 
-            snippets.forEach(snippet => {
-              vm.runScriptContext(snippet.preview, message);
-            });
-          } else if (code) {
-            const snippet = code.join(' ');
-            vm.runScriptContext(snippet, message);
-          } else {
-            rtm.sendMessage(
-              'You should attach a Javascript snippet / file as code!',
-              message.channel
-            );
+              snippets.forEach(snippet => {
+                if (new RegExp(keywordBlacklist.join('|')).test(snippet.preview)) {
+                  throw new Error(`Used a blacklisted keyword: ${keywordBlacklist.join(', ')}`);
+                }
+                vm.runScriptContext(snippet.preview, message);
+              });
+            } else if (code) {
+              const snippet = code.join(' ');
+              if (new RegExp(keywordBlacklist.join('|')).test(snippet)) {
+                throw new Error(`Used a blacklisted keyword: ${keywordBlacklist.join(', ')}`);
+              }
+              vm.runScriptContext(snippet, message);
+            } else {
+              rtm.sendMessage(
+                'You should attach a Javascript snippet / file as code!',
+                message.channel
+              );
+            }
+          } catch (error) {
+            rtm.sendMessage(`Something went wrong: ${error.message}`);
           }
         }
       );
