@@ -66,7 +66,8 @@ dashboard.prepare().then(() => {
    * Return our nextJS dashboard pages.
    */
   server.get('*', (req, res) => {
-    return handle(req, res);
+    res.statusCode = 403;
+    res.end();
   });
 
   /**
