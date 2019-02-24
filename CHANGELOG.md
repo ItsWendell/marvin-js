@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/ItsWendell/marvin-js/compare/1.0.3...1.1.0) (2019-02-24)
+
+
+### New features
+
+* experimental chat history improvements ([f6a3b6f](https://github.com/ItsWendell/marvin-js/commit/f6a3b6f))
+
 ## [1.0.3](https://github.com/ItsWendell/marvin-js/compare/1.0.2...1.0.3) (2019-02-20)
 
 
