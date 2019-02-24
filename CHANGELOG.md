@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/ItsWendell/marvin-js/compare/1.1.0...1.1.1) (2019-02-24)
+
+
+### Bug fixes
+
+* security issue with history logger being open ([c3a3bd0](https://github.com/ItsWendell/marvin-js/commit/c3a3bd0))
+
 # [1.1.0](https://github.com/ItsWendell/marvin-js/compare/1.0.3...1.1.0) (2019-02-24)
 
 
