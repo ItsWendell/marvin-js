@@ -1,5 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
+import { Layout } from 'antd';
 
 import './styles/index.less';
 
@@ -10,12 +11,14 @@ export default ({ children }) => (
       <meta charSet="utf-8" />
       <link rel="stylesheet" href="/_next/static/style.css" />
     </Head>
-    <style jsx global>
-      {`
-        body {
-        }
-      `}
-    </style>
-    {children}
+    <Layout>
+      <style jsx global>
+        {`
+          body {
+          }
+        `}
+      </style>
+      {children}
+    </Layout>
   </div>
 );

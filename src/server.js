@@ -2,7 +2,7 @@ import 'dotenv/config';
 import * as Sentry from '@sentry/node';
 import express from 'express';
 
-import { rtm, routes as SlackRoutes } from './slack';
+import { rtm, routes as SlackRoutes, web } from './slack';
 import dashboard from './dashboard';
 import database, { models } from './database';
 import * as modules from './modules';
@@ -55,6 +55,7 @@ dashboard.prepare().then(() => {
   // Expose MongoDB to NextJS
   server.use((req, res, next) => {
     req.models = models;
+    req.slackWeb = web;
     next();
   });
 
