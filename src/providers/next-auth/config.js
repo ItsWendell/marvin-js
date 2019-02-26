@@ -1,5 +1,5 @@
 import expressSession from 'express-session';
-import * as connectMongo from 'connect-mongo';
+import connectMongo from 'connect-mongo';
 import Providers from './providers';
 import Functions from './functions';
 

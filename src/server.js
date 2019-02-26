@@ -104,4 +104,6 @@ async function start() {
   });
 }
 
+start();
+
 export { app };
