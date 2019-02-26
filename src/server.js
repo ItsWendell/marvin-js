@@ -8,24 +8,16 @@ import { rtm, routes as SlackRoutes, web } from './slack';
 import dashboard from './dashboard';
 import database, { models } from './database';
 import * as modules from './modules';
+import { register } from './modules/intra42/jobs';
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 
 const app = express();
 
-/**
- * Sentry Implementation
- * @see https://docs.sentry.io/
- */
-if (process.env.SENTRY_DNS) {
-  Sentry.init({ dsn: process.env.SENTRY_DNS });
-  app.use(Sentry.Handlers.requestHandler());
-  app.use(Sentry.Handlers.errorHandler());
-}
-
 // We want to continue to run the server when asynchronous code fails
 process.on('uncaughtException', err => {
   console.error('[Server] Asynchronous error caught:', err.message);
+  throw err;
 });
 
 async function loadModules() {
@@ -67,6 +59,12 @@ async function start() {
   // Integrate our slack routes
   app.use('/api/slack', SlackRoutes);
 
+  app.get('/auth/logout', req => {
+    req.logOut();
+    req.logout();
+    req.end('Logged out?');
+  });
+
   // Next JS route handling
   app.get('*', (req, res) => {
     req.models = models;
@@ -75,10 +73,21 @@ async function start() {
     return nextRequestHandler(req, res);
   });
 
+  /**
+   * Sentry Implementation
+   * @see https://docs.sentry.io/
+   */
+  if (process.env.SENTRY_DNS) {
+    console.log('[Sentry] Sentry enabled.');
+    Sentry.init({ dsn: process.env.SENTRY_DNS });
+    app.use(Sentry.Handlers.requestHandler());
+    app.use(Sentry.Handlers.errorHandler());
+  }
+
   // Catch errors for sentry
   app.use((err, req, res, next) => {
     res.statusCode = 500;
-    res.end(`${res.sentry}\n`);
+    res.end(`${res.sentry} | THIS?\n`);
   });
 
   // Bind listener
@@ -104,6 +113,8 @@ async function start() {
   });
 }
 
-start();
+start().catch(message => {
+  console.log('[Server] Issue with not properly starting server', message);
+});
 
 export { app };

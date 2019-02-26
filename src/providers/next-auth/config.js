@@ -20,18 +20,20 @@ if (MONGODB_URI) {
   });
 }
 
+const appUrl = getAppUrl();
+
 export default expressApp => {
   return Functions().then(functions => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       resolve({
         sessionSecret: process.env.APP_SECRET || process.env.INTRA42_CLIENT_SECRET,
         sessionMaxAge: 60000 * 60 * 24 * 7,
         sessionRevalidateAge: 60000,
-        serverUrl: getAppUrl(),
+        serverUrl: appUrl.substring(0, appUrl.length - 1),
         expressSession,
         sessionStore,
         providers: Providers(),
-        functions: Functions(),
+        functions: await Functions(),
         expressApp: expressApp || undefined
       });
     });

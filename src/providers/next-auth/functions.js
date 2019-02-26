@@ -11,7 +11,7 @@ export default () => {
   }).then(User => {
     return Promise.resolve({
       // If a user is not found find() should return null (with no error).
-      find: ({ id, email, provider } = {}) => {
+      find: ({ id, email, provider, ...rest } = {}) => {
         let query = {};
 
         if (id) {
@@ -36,8 +36,7 @@ export default () => {
           if (insertUser.google)
             insertUser.forthytwo.login =
               oAuthProfile && oAuthProfile.login ? oAuthProfile.login : null;
-          insertUser
-            .create(insertUser)
+          UserModel.create(insertUser)
             .then(response => {
               if (!insertUser._id && response._id) insertUser._id = response._id;
               resolve(insertUser);
@@ -88,10 +87,8 @@ export default () => {
 
             return resolve({
               id: user._id,
-              name: user.name,
-              email: user.email,
-              emailVerified: user.emailVerified,
-              admin: user.admin || false
+              displayName: user.name,
+              email: user.email
             });
           });
         });

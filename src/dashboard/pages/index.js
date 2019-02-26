@@ -1,27 +1,27 @@
 import React, { Component } from 'react';
+import { NextAuth } from 'next-auth/client';
 
 import Layout from '../layout';
 
 export default class extends Component {
   static async getInitialProps({ req }) {
-    if (req) {
-      const { models } = req;
-      const factoids = await models.Factoid.find({}).exec();
-      return { factoids };
+    return {
+      session: await NextAuth.init({ req })
+    };
+  }
+
+  renderSession() {
+    const { session } = this.props;
+
+    if (session.user) {
+      return <h1>Logged In as {session.user.email}!</h1>;
     }
-    return {};
+
+    return <h1>Please login first!</h1>;
   }
 
   render() {
     const { factoids } = this.props;
-    return (
-      <Layout>
-        <h1>Factoids: #{`${factoids.length}`}</h1>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua.
-        </p>
-      </Layout>
-    );
+    return this.renderSession();
   }
 }
