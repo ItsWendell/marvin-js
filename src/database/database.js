@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import * as models from './models';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1/marvinjs';
+export const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1/marvinjs';
 
 class Database {
   constructor() {

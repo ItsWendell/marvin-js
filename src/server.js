@@ -3,18 +3,13 @@ import * as Sentry from '@sentry/node';
 import express from 'express';
 import nextAuth from 'next-auth';
 
-import nextAuth from 'next-auth';
-
 import nextAuthConfig from './providers/next-auth/config';
-import passport from './providers/passport';
 import { rtm, routes as SlackRoutes, web } from './slack';
 import dashboard from './dashboard';
 import database, { models } from './database';
 import * as modules from './modules';
 
 const port = parseInt(process.env.PORT, 10) || 3000;
-
-const handle = dashboard.getRequestHandler();
 
 const app = express();
 
@@ -74,8 +69,10 @@ async function start() {
 
   // Next JS route handling
   app.get('*', (req, res) => {
+    req.models = models;
+    req.slackWeb = web;
     const nextRequestHandler = dashboard.getRequestHandler();
-    return nextRequestHandler(req, res)
+    return nextRequestHandler(req, res);
   });
 
   // Catch errors for sentry
@@ -107,4 +104,4 @@ async function start() {
   });
 }
 
-export { app, listener };
+export { app };

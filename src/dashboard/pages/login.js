@@ -13,15 +13,17 @@ export default class extends Component {
   }
 
   login = () => {
-      // TODO: Oauth2 login
-  }
+    // TODO: Oauth2 login
+  };
 
   render() {
     const { factoids } = this.props;
     return (
       <Layout>
-          <h2>Login with intra42</h2>
-          <Button icon="key" onClick={this.login} type="primary">Login</Button>
+        <h2>Login with intra42</h2>
+        <Button icon="key" onClick={this.login} type="primary">
+          Login
+        </Button>
       </Layout>
     );
   }

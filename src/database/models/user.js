@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 
-export const Schema = new mongoose.Schema({
-  _id: mongoose.Schema.Types.ObjectId,
+export const schema = new Schema({
+  _id: Schema.Types.ObjectId,
   email: String,
   displayName: String,
   fortytwo: Object,
