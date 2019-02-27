@@ -9,18 +9,18 @@ export default class extends React.Component {
     };
   }
 
-  async componentDidMount() {
-    // Get latest session data after rendering on client then redirect.
-    // The ensures client state is always updated after signing in or out.
-    const session = await NextAuth.init({ force: true });
-    Router.push('/');
+  componentDidMount() {
+    console.log('Mounted.');
+    NextAuth.init({ force: true }).then(() => {
+      Router.push('/.');
+    });
   }
 
   render() {
     // Provide a link for clients without JavaScript as a fallback.
     return (
       <React.Fragment>
-        <style jsx global>{`
+        <style>{`
           body {
             background-color: #fff;
           }

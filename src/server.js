@@ -2,6 +2,7 @@ import 'dotenv/config';
 import * as Sentry from '@sentry/node';
 import express from 'express';
 import nextAuth from 'next-auth';
+import path from 'path';
 
 import nextAuthConfig from './providers/next-auth/config';
 import { rtm, routes as SlackRoutes, web } from './slack';
@@ -59,10 +60,12 @@ async function start() {
   // Integrate our slack routes
   app.use('/api/slack', SlackRoutes);
 
+  // app.use('/static', express.static(path.join(__dirname, '/dasbboard/.next/static')));
+
   // Next JS route handling
   app.get('*', (req, res) => {
-    // req.models = models;
-    // req.slackWeb = web;
+    req.models = models;
+    req.slackWeb = web;
     const nextRequestHandler = dashboard.getRequestHandler();
     return nextRequestHandler(req, res);
   });
@@ -81,7 +84,7 @@ async function start() {
   // Catch errors for sentry
   app.use((err, req, res, next) => {
     res.statusCode = 500;
-    res.end(`${res.sentry} | THIS?\n`);
+    res.end(`Error code: ${res.sentry}\n`);
   });
 
   // Bind listener

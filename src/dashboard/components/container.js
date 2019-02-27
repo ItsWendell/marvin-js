@@ -5,6 +5,7 @@ export default styled.div`
   margin-left: auto;
   padding-left: 15px;
   padding-right: 15px;
+  height: 100%;
 
   ${props =>
     props.center &&
