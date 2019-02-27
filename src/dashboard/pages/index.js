@@ -20,11 +20,10 @@ export default class extends Component {
   };
 
   renderGuest = () => {
-    console.log('user2');
     return (
       <Container center>
-        <h2>Login to MarvinJS</h2>
-        <Button onClick={this.login} type="primary" icon="key">
+        <h1>Login to MarvinJS</h1>
+        <Button onClick={this.login} type="primary" icon="unlock">
           Login with Intra42
         </Button>
       </Container>
@@ -51,10 +50,10 @@ export default class extends Component {
 
   renderUser = () => {
     const { session } = this.props;
-    console.log('user', session);
     return (
       <Container center>
         <h2>Logged in as {session.user.email}</h2>
+        <p>We are working on improving this dashboard, more is coming soon!</p>
         <div>
           {this.renderLogoutButton()}
           <Button href="/history" type="primary">
@@ -67,7 +66,6 @@ export default class extends Component {
 
   render() {
     const { session } = this.props;
-    console.log('session 2', session);
     return <Layout>{session && session.user ? this.renderUser() : this.renderGuest()}</Layout>;
   }
 }

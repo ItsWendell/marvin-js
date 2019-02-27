@@ -2,14 +2,12 @@ import 'dotenv/config';
 import * as Sentry from '@sentry/node';
 import express from 'express';
 import nextAuth from 'next-auth';
-import path from 'path';
 
 import nextAuthConfig from './providers/next-auth/config';
 import { rtm, routes as SlackRoutes, web } from './slack';
 import dashboard from './dashboard';
 import database, { models } from './database';
 import * as modules from './modules';
-import { register } from './modules/intra42/jobs';
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 

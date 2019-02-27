@@ -3,13 +3,13 @@ import Router from 'next/router';
 import moment from 'moment';
 import { NextAuth } from 'next-auth/client';
 
-import { Table, Button, Input, Icon } from 'antd';
+import { Table, Button, Input, Icon, Row, Col, Card } from 'antd';
 
 import Layout from '../components/layout';
 import Container from '../components/container';
 
 export default class extends Component {
-  static async getInitialProps({ req, query: { channel } }) {
+  static async getInitialProps({ req, query, query: { channel } }) {
     if (req) {
       const { models, slackWeb } = req;
       const params = channel
@@ -27,14 +27,10 @@ export default class extends Component {
       const { channels } = await slackWeb.channels.list();
       const { members } = await slackWeb.users.list();
 
-      return { history, channels, members, session: await NextAuth.init({ req }) };
+      return { query, history, channels, members, session: await NextAuth.init({ req }) };
     }
     return {};
   }
-
-  state = {
-    searchText: ''
-  };
 
   componentDidMount() {
     const { session } = this.props;
@@ -45,12 +41,32 @@ export default class extends Component {
 
   handleSearch = (selectedKeys, confirm) => {
     confirm();
-    this.setState({ searchText: selectedKeys[0] });
   };
 
   handleReset = clearFilters => {
     clearFilters();
-    this.setState({ searchText: '' });
+  };
+
+  renderChannels = () => {
+    const { channels } = this.props;
+    return (
+      <Row gutter={16} style={{ paddingBottom: '2rem' }}>
+        {channels.map(channel => {
+          return (
+            <Col span={8}>
+              <Card
+                extra={<a href={`/history?channel=${channel.id}`}>History</a>}
+                title={channel.name}
+                bordered={false}
+                style={{ height: '9rem' }}
+              >
+                {channel.topic && channel.topic.value}
+              </Card>
+            </Col>
+          );
+        })}
+      </Row>
+    );
   };
 
   renderHistoryTable() {
@@ -151,7 +167,7 @@ export default class extends Component {
           <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
         ),
         onFilter: (value, record) =>
-          record[dataIndex]
+          record.text
             .toString()
             .toLowerCase()
             .includes(value.toLowerCase()),
@@ -167,17 +183,19 @@ export default class extends Component {
   }
 
   render() {
-    const { history, session } = this.props;
-
+    const { session, query } = this.props;
     if (session && session.user) {
       return (
         <Layout>
           <Container>
             <h1>MarvinJS Chat History</h1>
-            <Button href="/" type="primary" style={{ marginBottom: '1rem' }}>
+            <Button href="/" type="ghost" style={{ marginBottom: '1rem', marginRight: '1rem' }}>
               Home
             </Button>
-            {this.renderHistoryTable()}
+            <Button href="/history" type="primary" style={{ marginBottom: '1rem' }}>
+              Overview
+            </Button>
+            {query && query.channel ? this.renderHistoryTable() : this.renderChannels()}
           </Container>
         </Layout>
       );

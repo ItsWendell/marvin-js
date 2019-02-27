@@ -10,7 +10,6 @@ export default class extends React.Component {
   }
 
   componentDidMount() {
-    console.log('Mounted.');
     NextAuth.init({ force: true }).then(() => {
       Router.push('/.');
     });

@@ -25,7 +25,6 @@ export default () => {
         }
       },
       getProfile(profile) {
-        console.log('profile', profile);
         // Normalize profile into one with {id, name, email} keys
         return {
           id: profile.id,
