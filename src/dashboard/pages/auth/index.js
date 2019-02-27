@@ -22,13 +22,13 @@ export default class extends React.Component {
     this.handleSignInSubmit = this.handleSignInSubmit.bind(this);
   }
 
-  handleEmailChange(event) {
+  handleEmailChange = event => {
     this.setState({
       email: event.target.value
     });
-  }
+  };
 
-  handleSignInSubmit(event) {
+  handleSignInSubmit = event => {
     event.preventDefault();
 
     if (!this.state.email) return;
@@ -37,10 +37,11 @@ export default class extends React.Component {
       .then(() => {
         Router.push(`/auth/check-email?email=${this.state.email}`);
       })
-      .catch(() => {
+      .catch(error => {
+        console.log('error', error);
         Router.push(`/auth/error?action=signin&type=email&email=${this.state.email}`);
       });
-  }
+  };
 
   render() {
     if (this.props.session) {

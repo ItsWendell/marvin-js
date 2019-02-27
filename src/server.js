@@ -59,16 +59,10 @@ async function start() {
   // Integrate our slack routes
   app.use('/api/slack', SlackRoutes);
 
-  app.get('/auth/logout', req => {
-    req.logOut();
-    req.logout();
-    req.end('Logged out?');
-  });
-
   // Next JS route handling
   app.get('*', (req, res) => {
-    req.models = models;
-    req.slackWeb = web;
+    // req.models = models;
+    // req.slackWeb = web;
     const nextRequestHandler = dashboard.getRequestHandler();
     return nextRequestHandler(req, res);
   });
