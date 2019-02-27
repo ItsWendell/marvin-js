@@ -192,9 +192,11 @@ export default class extends Component {
             <Button href="/" type="ghost" style={{ marginBottom: '1rem', marginRight: '1rem' }}>
               Home
             </Button>
-            <Button href="/history" type="primary" style={{ marginBottom: '1rem' }}>
-              Overview
-            </Button>
+            {query && query.channel && (
+              <Button href="/history" type="primary" style={{ marginBottom: '1rem' }}>
+                Overview
+              </Button>
+            )}
             {query && query.channel ? this.renderHistoryTable() : this.renderChannels()}
           </Container>
         </Layout>
