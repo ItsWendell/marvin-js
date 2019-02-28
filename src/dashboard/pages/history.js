@@ -1,20 +1,24 @@
 import React, { Component } from 'react';
+import Router from 'next/router';
 import moment from 'moment';
+import { NextAuth } from 'next-auth/client';
 
-import { Table } from 'antd';
+import { Table, Button, Input, Icon, Row, Col, Card } from 'antd';
 
-import Layout from '../layout';
-import Container from '../atoms/container';
+import Layout from '../components/layout';
+import Container from '../components/container';
 
 export default class extends Component {
-  static async getInitialProps({ req, query: { channel } }) {
+  static async getInitialProps({ req, query, query: { channel } }) {
     if (req) {
       const { models, slackWeb } = req;
       const params = channel
         ? {
             channelId: channel
           }
-        : {};
+        : {
+            channelId: { $regex: /^C/ }
+          };
       const history = await models.MessageHistory.find(params)
         .sort({
           timeString: -1
@@ -22,10 +26,48 @@ export default class extends Component {
         .exec();
       const { channels } = await slackWeb.channels.list();
       const { members } = await slackWeb.users.list();
-      return { history, channels, members };
+
+      return { query, history, channels, members, session: await NextAuth.init({ req }) };
     }
     return {};
   }
+
+  componentDidMount() {
+    const { session } = this.props;
+    if (!session || !session.user) {
+      Router.push('/.');
+    }
+  }
+
+  handleSearch = (selectedKeys, confirm) => {
+    confirm();
+  };
+
+  handleReset = clearFilters => {
+    clearFilters();
+  };
+
+  renderChannels = () => {
+    const { channels } = this.props;
+    return (
+      <Row gutter={16} style={{ paddingBottom: '2rem' }}>
+        {channels.map(channel => {
+          return (
+            <Col span={8}>
+              <Card
+                extra={<a href={`/history?channel=${channel.id}`}>History</a>}
+                title={channel.name}
+                bordered={false}
+                style={{ height: '9rem' }}
+              >
+                {channel.topic && channel.topic.value}
+              </Card>
+            </Col>
+          );
+        })}
+      </Row>
+    );
+  };
 
   renderHistoryTable() {
     const { history, channels, members } = this.props;
@@ -90,7 +132,50 @@ export default class extends Component {
       {
         title: 'Message',
         dataIndex: 'text',
-        key: 'text'
+        key: 'text',
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+          <div style={{ padding: 8 }}>
+            <Input
+              ref={node => {
+                this.searchInput = node;
+              }}
+              placeholder="Search text"
+              value={selectedKeys[0]}
+              onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+              onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
+              style={{ width: 188, marginBottom: 8, display: 'block' }}
+            />
+            <Button
+              type="primary"
+              onClick={() => this.handleSearch(selectedKeys, confirm)}
+              icon="search"
+              size="small"
+              style={{ width: 90, marginRight: 8 }}
+            >
+              Search
+            </Button>
+            <Button
+              onClick={() => this.handleReset(clearFilters)}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Reset
+            </Button>
+          </div>
+        ),
+        filterIcon: filtered => (
+          <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+        ),
+        onFilter: (value, record) =>
+          record.text
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase()),
+        onFilterDropdownVisibleChange: visible => {
+          if (visible) {
+            setTimeout(() => this.searchInput.select());
+          }
+        }
       }
     ];
 
@@ -98,14 +183,26 @@ export default class extends Component {
   }
 
   render() {
-    const { history } = this.props;
-    return (
-      <Layout>
-        <Container>
-          <h1>MarvinJS Chat History</h1>
-          {this.renderHistoryTable()}
-        </Container>
-      </Layout>
-    );
+    const { session, query } = this.props;
+    if (session && session.user) {
+      return (
+        <Layout>
+          <Container>
+            <h1>MarvinJS Chat History</h1>
+            <Button href="/" type="ghost" style={{ marginBottom: '1rem', marginRight: '1rem' }}>
+              Home
+            </Button>
+            {query && query.channel && (
+              <Button href="/history" type="primary" style={{ marginBottom: '1rem' }}>
+                Overview
+              </Button>
+            )}
+            {query && query.channel ? this.renderHistoryTable() : this.renderChannels()}
+          </Container>
+        </Layout>
+      );
+    }
+
+    return null;
   }
 }
