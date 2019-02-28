@@ -6,7 +6,7 @@ export default () => {
     providers.push({
       providerName: 'intra42',
       providerOptions: {
-        scope: ['public', 'profile']
+        scope: ['public']
       },
       Strategy: FortyTwoStrategy,
       strategyOptions: {
