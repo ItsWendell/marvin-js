@@ -5,6 +5,7 @@ export const schema = new Schema(
     email: String,
     displayName: String,
     intra42: Object,
+    slack: Object,
     admin: Boolean
   },
   {
@@ -13,5 +14,13 @@ export const schema = new Schema(
     }
   }
 );
+
+schema.methods.slackClient = function slackClient(cb) {
+  console.log('SLACK USER', this.slack);
+  if (this.slack && this.slack.accessToken) {
+    cb();
+  }
+  console.log(this.slack);
+};
 
 export default mongoose.model('User', schema);

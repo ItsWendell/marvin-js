@@ -47,6 +47,7 @@
     "parse-link-header": "^1.0.1",
     "passport": "^0.4.0",
     "passport-42": "^1.2.4",
+    "passport-slack": "0.0.7",
     "polished": "^3.0.0",
     "qs": "^6.6.0",
     "raven": "^2.6.4",

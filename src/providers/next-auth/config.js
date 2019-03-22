@@ -1,7 +1,8 @@
 import expressSession from 'express-session';
 import connectMongo from 'connect-mongo';
-import Providers from './providers';
 import Functions from './functions';
+
+import * as strategies from './strategies';
 
 import { getAppUrl } from '../../utilities';
 import { MONGODB_URI } from '../../database';
@@ -20,6 +21,8 @@ if (MONGODB_URI) {
   });
 }
 
+console.log('strategies', strategies);
+
 const appUrl = getAppUrl();
 
 export default expressApp => {
@@ -32,7 +35,7 @@ export default expressApp => {
         serverUrl: appUrl.substring(0, appUrl.length - 1),
         expressSession,
         sessionStore,
-        providers: Providers(),
+        providers: Object.values(strategies),
         functions: await Functions(),
         expressApp: expressApp || undefined
       });

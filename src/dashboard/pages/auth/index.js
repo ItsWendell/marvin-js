@@ -3,13 +3,44 @@ import Router from 'next/router';
 import Link from 'next/link';
 import { NextAuth } from 'next-auth/client';
 
+import LinkAccount from '../../components/link-account';
+
 export default class extends React.Component {
   static async getInitialProps({ req }) {
-    return {
+    const data = {
       session: await NextAuth.init({ req }),
       linkedAccounts: await NextAuth.linked({ req }),
       providers: await NextAuth.providers({ req })
     };
+    const user = await req.models.User.find({
+      _id: data.session.user.id
+    });
+    console.log('USER', user);
+    return {
+      ...data
+    };
+  }
+
+  renderProviders() {
+    const { linkedAccounts, session } = this.props;
+    console.log('linked', linkedAccounts, session);
+    return (
+      <div className="card mt-3 mb-3">
+        <h4 className="card-header">Link Accounts</h4>
+        <div className="card-body pb-0">
+          {Object.keys(linkedAccounts).map((provider, id) => {
+            return (
+              <LinkAccount
+                key={`${provider}`}
+                provider={provider}
+                session={session}
+                linked={linkedAccounts[provider]}
+              />
+            );
+          })}
+        </div>
+      </div>
+    );
   }
 
   render() {
@@ -23,6 +54,7 @@ export default class extends React.Component {
               You are signed in as <span className="font-weight-bold">{session.user.email}</span>.
             </p>
           </div>
+          {this.renderProviders()}
           <p className="text-center">
             <Link href="/">Home</Link>
           </p>

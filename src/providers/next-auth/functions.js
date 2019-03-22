@@ -48,9 +48,12 @@ export default () => {
 
       update: (user, profile, field) => {
         return new Promise((resolve, reject) => {
+          console.log('update', { user, profile, field });
           const mod = field ? { $unset: { [field.delete]: 1 } } : user;
-          User.update({ _id: ObjectId(user._id) }, mod, { new: true })
+          console.log('MOD', mod);
+          User.update({ _id: ObjectId(user._id) }, user, { new: true })
             .then(resp => {
+              console.log('resp', resp);
               resolve(user);
             })
             .catch(err => reject(err));

@@ -1,9 +1,7 @@
 import { Strategy as FortyTwoStrategy } from 'passport-42';
 
-export default () => {
-  const providers = [];
-  if (process.env.INTRA42_CLIENT_ID && process.env.INTRA42_CLIENT_SECRET) {
-    providers.push({
+export default (process.env.INTRA42_CLIENT_ID && process.env.INTRA42_CLIENT_SECRET
+  ? {
       providerName: 'intra42',
       providerOptions: {
         scope: ['public']
@@ -32,7 +30,5 @@ export default () => {
           email: profile.emails[0].value
         };
       }
-    });
-  }
-  return providers;
-};
+    }
+  : {});
