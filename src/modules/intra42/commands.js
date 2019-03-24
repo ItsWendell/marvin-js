@@ -38,7 +38,7 @@ export function register() {
               }
             })
             .then(data => {
-              if (data) {
+              if (data && data.length) {
                 // Add up a total duration of the current rage
                 const totalDuration = data.reduce((duration, item) => {
                   let itemStart = moment.utc(item.begin_at);
@@ -80,6 +80,11 @@ export function register() {
                       ? ` (Logged in at ${activeSession.host})`
                       : ` (Last seen: ${moment.utc(data[0].end_at).fromNow()})`
                   }`,
+                  message.channel
+                );
+              } else {
+                rtm.sendMessage(
+                  `${username} hasn't been here yet this week, that slacker!`,
                   message.channel
                 );
               }
@@ -135,6 +140,9 @@ export function register() {
             chunk(results, 50).forEach(items => {
               rtm.sendMessage(items.join(', '), message.channel);
             });
+          })
+          .catch(error => {
+            rtm.sendMessage(`Something went wrong: ${error.message}`, message.channel);
           });
       })
       .command('*', false, {}, ({ message }) => {
