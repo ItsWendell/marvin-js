@@ -21,8 +21,6 @@ if (MONGODB_URI) {
   });
 }
 
-console.log('strategies', strategies);
-
 const appUrl = getAppUrl();
 
 export default expressApp => {

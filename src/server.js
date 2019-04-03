@@ -86,25 +86,19 @@ async function start() {
   });
 
   // Bind listener
-  app.listen(port, err => {
+  app.listen(port, async err => {
     if (err) throw err;
 
     // Connect to MongoDB
-    database
-      .connect()
-      .then(() => {
-        console.log('[Database] Connected to database', database.db.databaseName);
-        // Connect to Slack Real Time Chat
-        rtm.start().then(async () => {
-          // Load MarvinJS modules
-          await loadModules();
-          console.log(`[Server] Ready on port ${port}`);
-        });
-      })
-      .catch(error => {
-        console.log('[Database]', error.message);
-        throw error;
-      });
+    await database.connect();
+    console.log('[Database] Connected to database', database.db.databaseName);
+
+    // Start slack RTM client
+    await rtm.start();
+    console.log('[Database] Connected to slack');
+
+    // Load modules
+    await loadModules();
   });
 }
 
