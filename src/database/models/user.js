@@ -16,7 +16,7 @@ export const schema = new Schema(
   }
 );
 
-schema.methods.slackClient = function slackClient() {
+schema.method('slackClient', function slackClient() {
   const { SLACK_CLIENT_ID, SLACK_CLIENT_SECRET } = process.env;
   if (this.slack && this.slack.accessToken) {
     return new WebClient(this.slack.accessToken, {
@@ -25,6 +25,6 @@ schema.methods.slackClient = function slackClient() {
     });
   }
   return null;
-};
+});
 
 export default mongoose.model('User', schema);

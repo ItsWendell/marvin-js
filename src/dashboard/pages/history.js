@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import Router from 'next/router';
-import moment from 'moment';
 import { NextAuth } from 'next-auth/client';
 
-import { Table, Button, Input, Icon, Row, Col, Card } from 'antd';
+import { Button, Row, Col, Card } from 'antd';
 
 import Layout from '../components/layout';
 import Container from '../components/container';
@@ -105,7 +104,7 @@ export default class extends Component {
   renderGuest = () => {
     return (
       <div>
-        <h2>Whoops, you're not in the right team or not logged-in to slack.</h2>
+        <h2>Whoops, you are not in the right team or not logged-in to slack.</h2>
         <a href="/auth/oauth/slack">
           <img
             alt="Sign in with Slack"

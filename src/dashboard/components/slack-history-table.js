@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 
-import { Table, Button, Input, Icon, Row, Col, Card } from 'antd';
+import { Table, Button, Input, Icon } from 'antd';
 
 export default class SlackHistoryTable extends Component {
   state = {};
