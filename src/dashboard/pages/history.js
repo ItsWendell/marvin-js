@@ -128,8 +128,7 @@ export default class extends Component {
   };
 
   render() {
-    const { session, query, userConversations } = this.props;
-    console.log('userConversations', userConversations);
+    const { session, query } = this.props;
     if (session && session.user) {
       return (
         <Layout>
