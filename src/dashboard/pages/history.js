@@ -7,27 +7,52 @@ import { Table, Button, Input, Icon, Row, Col, Card } from 'antd';
 
 import Layout from '../components/layout';
 import Container from '../components/container';
+import SlackHistoryTable from '../components/slack-history-table';
 
 export default class extends Component {
   static async getInitialProps({ req, query, query: { channel } }) {
     if (req) {
       const { models, slackWeb } = req;
+      const session = await NextAuth.init({ req });
+      const user =
+        session && session.user && session.user.id && (await models.User.findById(session.user.id));
+
+      if (!(user && user.slack && user.slackClient())) {
+        return {
+          session
+        };
+      }
+
+      const { members } = await slackWeb.users.list();
+
+      const { channels: userChannels } =
+        user.slackClient() && (await user.slackClient().conversations.list());
+
+      /** @type WebClient */
       const params = channel
         ? {
-            channelId: channel
+            channelId: userChannels.map(item => item.id).includes(channel) ? channel : null
           }
         : {
-            channelId: { $regex: /^C/ }
+            channelId: {
+              $in: userChannels.map(item => item.id)
+            }
           };
       const history = await models.MessageHistory.find(params)
         .sort({
           timeString: -1
         })
         .exec();
-      const { channels } = await slackWeb.channels.list();
-      const { members } = await slackWeb.users.list();
-
-      return { query, history, channels, members, session: await NextAuth.init({ req }) };
+      return {
+        query,
+        history,
+        members,
+        session,
+        userChannels,
+        userSlackIdentity: user.slackClient() && (await user.slackClient().users.identity()),
+        botSlackTeam: await slackWeb.team.info(),
+        linkedAccounts: await NextAuth.linked({ req })
+      };
     }
     return {};
   }
@@ -48,12 +73,12 @@ export default class extends Component {
   };
 
   renderChannels = () => {
-    const { channels } = this.props;
+    const { userChannels } = this.props;
     return (
       <Row gutter={16} style={{ paddingBottom: '2rem' }}>
-        {channels.map(channel => {
+        {[...userChannels, ...userChannels].map(channel => {
           return (
-            <Col span={8}>
+            <Col css="margin: 0.5rem 0;" span={8}>
               <Card
                 extra={<a href={`/history?channel=${channel.id}`}>History</a>}
                 title={channel.name}
@@ -69,121 +94,43 @@ export default class extends Component {
     );
   };
 
-  renderHistoryTable() {
-    const { history, channels, members } = this.props;
+  hasSlackAccess = () => {
+    const { botSlackTeam, userSlackIdentity } = this.props;
+    if (!(botSlackTeam && botSlackTeam.team && userSlackIdentity && userSlackIdentity.team)) {
+      return false;
+    }
+    return botSlackTeam.team.id === userSlackIdentity.team.id;
+  };
 
-    const data = history.map(item => ({
-      key: item._id,
-      ...item
-    }));
+  renderGuest = () => {
+    return (
+      <div>
+        <h2>Whoops, you're not in the right team or not logged-in to slack.</h2>
+        <a href="/auth/oauth/slack">
+          <img
+            alt="Sign in with Slack"
+            height="40"
+            width="172"
+            src="https://platform.slack-edge.com/img/sign_in_with_slack.png"
+            srcSet="https://platform.slack-edge.com/img/sign_in_with_slack.png 1x, https://platform.slack-edge.com/img/sign_in_with_slack@2x.png 2x"
+          />
+        </a>
+      </div>
+    );
+  };
 
-    const columns = [
-      {
-        title: 'Channel',
-        dataIndex: 'channelId',
-        key: 'channelId',
-        render: (text, record, index) => {
-          const channel = channels.find(item => item.id === record.channelId);
-          if (channel) {
-            return channel.name;
-          }
-          return text;
-        },
-        filters:
-          data &&
-          [...new Set(data.map(item => item.channelId))].map(channelId => {
-            const channel = channels.find(item => item.id === channelId);
-            return {
-              text: (channel && channel.name) || channelId,
-              value: channelId || ''
-            };
-          }),
-        onFilter: (value, item) => item.channelId === value
-      },
-      {
-        title: 'Time',
-        dataIndex: 'timeString',
-        key: 'timeString',
-        render: (text, record, index) => <p>{moment.unix(record.timeString).toLocaleString()}</p>,
-        sorter: (a, b) => a.timeString.localeCompare(b.timeString)
-      },
-      {
-        title: 'User',
-        dataIndex: 'userId',
-        key: 'userId',
-        render: (text, record, index) => {
-          const member = members.find(item => item.id === record.userId);
-          if (member) {
-            return member.name;
-          }
-          return text;
-        },
-        filters:
-          data &&
-          [...new Set(data.map(item => item.userId))].map(userId => {
-            const member = members.find(item => item.id === userId);
-            return {
-              text: (member && member.name) || userId,
-              value: userId || ''
-            };
-          }),
-        onFilter: (value, item) => item.userId === value
-      },
-      {
-        title: 'Message',
-        dataIndex: 'text',
-        key: 'text',
-        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-          <div style={{ padding: 8 }}>
-            <Input
-              ref={node => {
-                this.searchInput = node;
-              }}
-              placeholder="Search text"
-              value={selectedKeys[0]}
-              onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-              onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
-              style={{ width: 188, marginBottom: 8, display: 'block' }}
-            />
-            <Button
-              type="primary"
-              onClick={() => this.handleSearch(selectedKeys, confirm)}
-              icon="search"
-              size="small"
-              style={{ width: 90, marginRight: 8 }}
-            >
-              Search
-            </Button>
-            <Button
-              onClick={() => this.handleReset(clearFilters)}
-              size="small"
-              style={{ width: 90 }}
-            >
-              Reset
-            </Button>
-          </div>
-        ),
-        filterIcon: filtered => (
-          <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
-        ),
-        onFilter: (value, record) =>
-          record.text
-            .toString()
-            .toLowerCase()
-            .includes(value.toLowerCase()),
-        onFilterDropdownVisibleChange: visible => {
-          if (visible) {
-            setTimeout(() => this.searchInput.select());
-          }
-        }
-      }
-    ];
+  renderLoggedIn = () => {
+    const { query, history, userChannels, members } = this.props;
 
-    return <Table dataSource={data} columns={columns} />;
-  }
+    if (query && query.channel) {
+      return <SlackHistoryTable history={history} channels={userChannels} members={members} />;
+    }
+    return this.renderChannels();
+  };
 
   render() {
-    const { session, query } = this.props;
+    const { session, query, userConversations } = this.props;
+    console.log('userConversations', userConversations);
     if (session && session.user) {
       return (
         <Layout>
@@ -192,12 +139,14 @@ export default class extends Component {
             <Button href="/" type="ghost" style={{ marginBottom: '1rem', marginRight: '1rem' }}>
               Home
             </Button>
+
             {query && query.channel && (
               <Button href="/history" type="primary" style={{ marginBottom: '1rem' }}>
                 Overview
               </Button>
             )}
-            {query && query.channel ? this.renderHistoryTable() : this.renderChannels()}
+
+            {this.hasSlackAccess() ? this.renderLoggedIn() : this.renderGuest()}
           </Container>
         </Layout>
       );

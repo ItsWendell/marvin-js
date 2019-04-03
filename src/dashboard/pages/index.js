@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Router from 'next/router';
 import { NextAuth } from 'next-auth/client';
+import Link from 'next/link';
 
 import { Button } from 'antd';
 import Container from '../components/container';
@@ -39,20 +40,17 @@ export default class extends Component {
         style={{ display: 'inline-block', paddingRight: '1rem' }}
       >
         <input name="_csrf" type="hidden" value={session.csrfToken} />
-        <p>
-          <Button type="ghost" htmlType="submit">
-            Logout
-          </Button>
-        </p>
+        <Button type="ghost" htmlType="submit">
+          Logout
+        </Button>
       </form>
     );
   };
 
   renderUser = () => {
-    const { session } = this.props;
     return (
       <Container center>
-        <h2>Logged in as {session.user.email}</h2>
+        <h2>Hi there!</h2>
         <p>We are working on improving this dashboard, more is coming soon!</p>
         <div>
           {this.renderLogoutButton()}
@@ -60,6 +58,9 @@ export default class extends Component {
             Slack History
           </Button>
         </div>
+        <p css="padding-top: 1rem;">
+          <Link href="/auth">Account Details</Link>
+        </p>
       </Container>
     );
   };

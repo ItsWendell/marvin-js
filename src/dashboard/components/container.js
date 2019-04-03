@@ -3,8 +3,9 @@ import styled from 'styled-components';
 export default styled.div`
   margin-right: auto;
   margin-left: auto;
-  padding-left: 15px;
-  padding-right: 15px;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding: 15px 2rem;
   height: 100%;
 
   ${props =>

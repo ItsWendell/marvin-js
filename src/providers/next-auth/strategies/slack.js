@@ -4,7 +4,8 @@ export default (process.env.SLACK_CLIENT_ID && process.env.SLACK_CLIENT_SECRET
   ? {
       providerName: 'slack',
       providerOptions: {
-        scope: ['identity.basic', 'identity.email', 'identity.avatar', 'identity.team']
+        scope: ['channels:read', 'groups:read'],
+        team: process.env.SLACK_WORKSPACE
       },
       Strategy: SlackStrategy,
       strategyOptions: {

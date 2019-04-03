@@ -46,17 +46,23 @@ export default () => {
         });
       },
 
-      update: (user, profile, field) => {
+      update: (user, oAuthProfile, field) => {
+        const updateUser = user;
         return new Promise((resolve, reject) => {
-          console.log('update', { user, profile, field });
-          const mod = field ? { $unset: { [field.delete]: 1 } } : user;
-          console.log('MOD', mod);
-          User.update({ _id: ObjectId(user._id) }, user, { new: true })
+          if (oAuthProfile && oAuthProfile.provider === 'Slack' && user.slack) {
+            updateUser.slack.workspaceDomain = oAuthProfile.team.domain;
+          }
+          const mod = field && field.delete ? { $unset: { [field.delete]: 1 } } : updateUser;
+          User.update({ _id: ObjectId(updateUser._id) }, mod, { new: true })
             .then(resp => {
               console.log('resp', resp);
-              resolve(user);
+              console.log('updateUser', updateUser, oAuthProfile);
+              resolve(updateUser);
             })
-            .catch(err => reject(err));
+            .catch(err => {
+              console.log('ERROR:', err);
+              reject(err);
+            });
         });
       },
 
@@ -93,7 +99,8 @@ export default () => {
             return resolve({
               id: user._id,
               displayName: user.name,
-              email: user.email
+              email: user.email,
+              slackId: user.slackId
             });
           });
         });

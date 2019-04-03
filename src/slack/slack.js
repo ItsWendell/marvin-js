@@ -11,7 +11,7 @@ const rtm = new RTMClient(SLACK_TOKEN);
 const web = new WebClient(SLACK_TOKEN);
 
 // Initialize basic events
-rtm.on('connected', () => {
+rtm.on('connected', async () => {
   console.log('[Slackbot] Connected to Slack!');
   web.channels.list().then(({ channels, ...data }) => {
     console.log('[Slackbot] Slack channels:', channels.map(channel => channel.name).join(', '));

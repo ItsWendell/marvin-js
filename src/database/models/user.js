@@ -1,4 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
+import { WebClient } from '@slack/client';
 
 export const schema = new Schema(
   {
@@ -15,12 +16,15 @@ export const schema = new Schema(
   }
 );
 
-schema.methods.slackClient = function slackClient(cb) {
-  console.log('SLACK USER', this.slack);
+schema.methods.slackClient = function slackClient() {
+  const { SLACK_CLIENT_ID, SLACK_CLIENT_SECRET } = process.env;
   if (this.slack && this.slack.accessToken) {
-    cb();
+    return new WebClient(this.slack.accessToken, {
+      clientId: SLACK_CLIENT_ID,
+      clientSecret: SLACK_CLIENT_SECRET
+    });
   }
-  console.log(this.slack);
+  return null;
 };
 
 export default mongoose.model('User', schema);
