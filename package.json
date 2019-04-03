@@ -7,6 +7,9 @@
     "type": "git",
     "url": "git@github.com:ItsWendell/marvin-js.git"
   },
+  "engines": {
+    "node": "11.13.0"
+  },
   "main": "build/server.js",
   "scripts": {
     "dev": "nodemon src/",
