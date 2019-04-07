@@ -13,6 +13,7 @@ export default (process.env.SLACK_CLIENT_ID && process.env.SLACK_CLIENT_SECRET
         clientSecret: process.env.SLACK_CLIENT_SECRET
       },
       getProfile(profile) {
+        console.log('PROFILE SLACK', profile);
         // Normalize profile into one with {id, name, email} keys
         return {
           id: profile.id,
