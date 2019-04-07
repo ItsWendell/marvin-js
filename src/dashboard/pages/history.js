@@ -75,20 +75,21 @@ export default class extends Component {
     const { userChannels } = this.props;
     return (
       <Row gutter={16} style={{ paddingBottom: '2rem' }}>
-        {[...userChannels, ...userChannels].map(channel => {
-          return (
-            <Col css="margin: 0.5rem 0;" span={8}>
-              <Card
-                extra={<a href={`/history?channel=${channel.id}`}>History</a>}
-                title={channel.name}
-                bordered={false}
-                style={{ height: '9rem' }}
-              >
-                {channel.topic && channel.topic.value}
-              </Card>
-            </Col>
-          );
-        })}
+        {userChannels &&
+          userChannels.map(channel => {
+            return (
+              <Col css="margin: 0.5rem 0;" span={8}>
+                <Card
+                  extra={<a href={`/history?channel=${channel.id}`}>History</a>}
+                  title={channel.name}
+                  bordered={false}
+                  style={{ height: '9rem' }}
+                >
+                  {channel.topic && channel.topic.value}
+                </Card>
+              </Col>
+            );
+          })}
       </Row>
     );
   };
