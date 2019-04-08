@@ -32,7 +32,6 @@ export default class extends Component {
 
       userChannels = userChannels.filter(item => !!item.is_member);
 
-      console.log('userChannels', userChannels);
       /** @type WebClient */
       const params = channel
         ? {

@@ -1,6 +1,7 @@
 import moment from 'moment';
 import commands from '../providers/commands';
 import { rtm } from '../slack';
+import { getAppUrl } from '../utilities';
 
 import MessageHistory from '../database/models/message-history';
 
@@ -61,22 +62,10 @@ export function registerCommands() {
     })
     .command('history', 'Show all history logs.', {}, ({ message }) => {
       rtm.sendTyping();
-      MessageHistory.find({ channelId: message.channel })
-        .sort({ date: -1 })
-        .limit(20)
-        .exec()
-        .then(results => {
-          const messages = results
-            .map(item => {
-              return `${item.userId}: ${item.text}`;
-            })
-            .join('\n');
-          rtm.sendMessage(
-            `${`Latest 20 messages from this channel: \n` +
-              `_(This is a limited proof of concept, all history will be available in the dashboard soon.)_\n\n`}${messages}`,
-            message.channel
-          );
-        });
+      rtm.sendMessage(
+        `Lost some of the slack history? Check out the marvin dashboard: ${getAppUrl()}`,
+        message.channel
+      );
     })
     .command('server', 'List basic server / process information.', {}, argv => {
       const rssMB = process.memoryUsage().rss / (1024 * 1024);
