@@ -24,9 +24,15 @@ export default class extends Component {
 
       const { members } = await slackWeb.users.list();
 
-      const { channels: userChannels } =
-        user.slackClient() && (await user.slackClient().conversations.list());
+      let { channels: userChannels } =
+        user.slackClient() &&
+        (await user.slackClient().conversations.list({
+          types: 'public_channel,private_channel'
+        }));
 
+      userChannels = userChannels.filter(item => !!item.is_member);
+
+      console.log('userChannels', userChannels);
       /** @type WebClient */
       const params = channel
         ? {
@@ -37,7 +43,19 @@ export default class extends Component {
               $in: userChannels.map(item => item.id)
             }
           };
-      const history = await models.MessageHistory.find(params)
+      const history = await models.MessageHistory.find({
+        ...params,
+        text: {
+          $ne: null
+        },
+        $or: [
+          {
+            text: {
+              $ne: ''
+            }
+          }
+        ]
+      })
         .sort({
           timeString: -1
         })
