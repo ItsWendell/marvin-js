@@ -18,5 +18,10 @@ rtm.on('connected', async () => {
   });
 });
 
+const getGeneralChannel = async () => {
+  const { channels } = await web.channels.list();
+  return channels.find(item => item.name_normalized === 'general');
+};
+
 // Export the RTM and WEB clients
-export { rtm, web };
+export { rtm, web, getGeneralChannel };

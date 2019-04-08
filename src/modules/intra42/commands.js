@@ -1,6 +1,6 @@
 import moment from 'moment';
 import commands from '../../providers/commands';
-import { client, sendCoalitionStats } from './intra42';
+import { client, sendCoalitionStats, fetchCoalitionStats } from './intra42';
 import { rtm } from '../../slack';
 import { chunk } from '../../providers/helpers';
 
@@ -11,6 +11,10 @@ export function register() {
       .demandCommand(1, '')
       .command('coalitions', 'Coalition commands of the 42 network.', {}, ({ message }) => {
         sendCoalitionStats(message.channel);
+      })
+      .command('coalition-stats', 'Coalition commands of the 42 network.', {}, ({ message }) => {
+        fetchCoalitionStats();
+        rtm.sendMessage('Fetching...', message.channel);
       })
       .command(
         'hours <username>',
