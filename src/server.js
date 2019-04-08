@@ -83,6 +83,7 @@ async function start() {
   app.use((err, req, res, next) => {
     res.statusCode = 500;
     res.end(`Error code: ${res.sentry}\n`);
+    console.log('[Express] Error:', err);
   });
 
   // Bind listener
