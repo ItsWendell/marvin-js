@@ -49,6 +49,8 @@ export function sendCoalitionStats(channelId = null) {
           channel = generalChannel.id;
         }
 
+        console.log('Coalition Data', data.map(bloc => bloc.coalitions));
+
         const result = data
           .map(bloc => {
             return bloc.coalitions.map(col => `*${col.name}:* ${col.score} Points`).join(' | ');
