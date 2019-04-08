@@ -65,7 +65,7 @@ export function sendCoalitionStats(channelId = null) {
     });
 }
 
-export async function sendCoalitionUpdates(result) {
+export async function sendCoalitionUpdates(result, manual) {
   const topNow = result.sort((a, b) => b.score - a.score);
 
   const currentCoalition = topNow[0].slug;
@@ -83,7 +83,7 @@ export async function sendCoalitionUpdates(result) {
   const topHistory = history.sort((a, b) => b.score - a.score);
   const historyCoalition = history && history.length && topHistory[0].slug;
 
-  if (history.length && currentCoalition !== historyCoalition) {
+  if ((history.length && currentCoalition !== historyCoalition) || manual) {
     const channel = await getGeneralChannel();
     const pointsDiff = topNow[0].score - topNow[1].score;
     rtm.sendMessage(
@@ -98,12 +98,9 @@ export async function sendCoalitionUpdates(result) {
       .join(' | ');
     rtm.sendMessage(formattedPoints, channel.id);
   }
-  console.log('current: ', currentCoalition, ' history:', historyCoalition);
-
-  console.log('history', history);
 }
 
-export function fetchCoalitionStats() {
+export function fetchCoalitionStats(manual = false) {
   client
     .getBlocs({
       filter: {
@@ -126,7 +123,7 @@ export function fetchCoalitionStats() {
 
         const result = await Promise.all(promises);
 
-        await sendCoalitionUpdates(result);
+        await sendCoalitionUpdates(result, manual);
         console.log('[fetchCoalitionStats] Fetched new coalition states...');
       } catch (error) {
         console.log('[sendCoalitionStats]', error.message);
