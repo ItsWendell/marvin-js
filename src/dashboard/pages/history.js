@@ -122,8 +122,15 @@ export default class extends Component {
   renderLoggedIn = () => {
     const { query, history, userChannels, members } = this.props;
 
-    if (query && query.channel) {
+    if (query && query.channel && userChannels.map(item => item.id).includes(query.channel)) {
       return <SlackHistoryTable history={history} channels={userChannels} members={members} />;
+    }
+    if (query && query.channel) {
+      return (
+        <div>
+          <h2>You do not have access to this channel!</h2>
+        </div>
+      );
     }
     return this.renderChannels();
   };
