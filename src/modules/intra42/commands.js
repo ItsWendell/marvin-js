@@ -12,7 +12,7 @@ export function register() {
       .command('coalitions', 'Coalition commands of the 42 network.', {}, ({ message }) => {
         sendCoalitionStats(message.channel);
       })
-      .command('coalition-stats', 'Manual coalition update checker. (temporary)', {}, ({ message }) => {
+      .command('coalition-stats', 'Manual coalition update checker. (temporary)', {}, () => {
         fetchCoalitionStats(true);
       })
       .command(
