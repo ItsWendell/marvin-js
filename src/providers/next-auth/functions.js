@@ -12,7 +12,6 @@ export default () => {
     return Promise.resolve({
       // If a user is not found find() should return null (with no error).
       find: ({ id, email, provider } = {}) => {
-        console.log('OAuthProfile Find', id, email, provider);
         let query = {};
 
         if (id) {
@@ -33,7 +32,6 @@ export default () => {
       },
 
       insert: (user, oAuthProfile) => {
-        console.log('OAuthProfile Insert', oAuthProfile);
         const newUser = user;
         return new Promise((resolve, reject) => {
           // next-auth returns normalized user, so the rest of fields needed from oAuthProfile  must be added here
@@ -49,22 +47,17 @@ export default () => {
       },
 
       update: (user, oAuthProfile, field) => {
-        console.log('OAuthProfile Update', oAuthProfile);
         const updateUser = user;
         return new Promise((resolve, reject) => {
           if (oAuthProfile && oAuthProfile.provider === 'Slack') {
-            console.log('setting slack workspace domain for user...');
             updateUser.slack.workspaceDomain = oAuthProfile.team.domain;
           }
           const mod = field && field.delete ? { $unset: { [field.delete]: 1 } } : updateUser;
           User.update({ _id: ObjectId(updateUser._id) }, mod, { new: true })
             .then(resp => {
-              console.log('resp', resp);
-              console.log('updateUser', updateUser, oAuthProfile);
               resolve(updateUser);
             })
             .catch(err => {
-              console.log('ERROR:', err);
               reject(err);
             });
         });
