@@ -22,53 +22,59 @@ export default class extends Component {
         };
       }
 
-      const { members } = await slackWeb.users.list();
+      try {
+        const { members } = await slackWeb.users.list();
 
-      let { channels: userChannels } =
-        user.slackClient() &&
-        (await user.slackClient().conversations.list({
-          types: 'public_channel,private_channel'
-        }));
+        let { channels: userChannels } =
+          user.slackClient() &&
+          (await user.slackClient().conversations.list({
+            types: 'public_channel,private_channel'
+          }));
 
-      userChannels = userChannels.filter(item => !!item.is_member);
+        userChannels = userChannels.filter(item => !!item.is_member);
 
-      /** @type WebClient */
-      const params = channel
-        ? {
-            channelId: userChannels.map(item => item.id).includes(channel) ? channel : null
-          }
-        : {
-            channelId: {
-              $in: userChannels.map(item => item.id)
+        /** @type WebClient */
+        const params = channel
+          ? {
+              channelId: userChannels.map(item => item.id).includes(channel) ? channel : null
             }
-          };
-      const history = await models.MessageHistory.find({
-        ...params,
-        text: {
-          $ne: null
-        },
-        $or: [
-          {
-            text: {
-              $ne: ''
+          : {
+              channelId: {
+                $in: userChannels.map(item => item.id)
+              }
+            };
+        const history = await models.MessageHistory.find({
+          ...params,
+          text: {
+            $ne: null
+          },
+          $or: [
+            {
+              text: {
+                $ne: ''
+              }
             }
-          }
-        ]
-      })
-        .sort({
-          timeString: -1
+          ]
         })
-        .exec();
-      return {
-        query,
-        history,
-        members,
-        session,
-        userChannels,
-        userSlackIdentity: user.slackClient() && (await user.slackClient().users.identity()),
-        botSlackTeam: await slackWeb.team.info(),
-        linkedAccounts: await NextAuth.linked({ req })
-      };
+          .sort({
+            timeString: -1
+          })
+          .exec();
+        return {
+          query,
+          history,
+          members,
+          session,
+          userChannels,
+          userSlackIdentity: user.slackClient() && (await user.slackClient().users.identity()),
+          botSlackTeam: await slackWeb.team.info(),
+          linkedAccounts: await NextAuth.linked({ req })
+        };
+      } catch (error) {
+        console.log('[Slack History] Something went wrong', error);
+        throw error;
+        return {};
+      }
     }
     return {};
   }
