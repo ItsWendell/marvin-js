@@ -128,7 +128,8 @@ export function register() {
         client
           .getAll(`/campus/${process.env.INTRA42_CAMPUS_ID}/locations`, {
             filter: {
-              active: true
+              active: true,
+              primary: true,
             },
             per_page: 100
           })
