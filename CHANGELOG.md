@@ -1,3 +1,53 @@
+# [1.2.0](https://github.com/ItsWendell/marvin-js/compare/1.1.1...1.2.0) (2019-05-07)
+
+
+### Bug fixes
+
+* add is_member filter and filter out empty messages ([3673c8f](https://github.com/ItsWendell/marvin-js/commit/3673c8f))
+* add manual option to coalition-stats command ([de84935](https://github.com/ItsWendell/marvin-js/commit/de84935))
+* attempt to fix daily coalition updates ([b1e078b](https://github.com/ItsWendell/marvin-js/commit/b1e078b))
+* attempt to fix slack history oauth permissions ([ad42859](https://github.com/ItsWendell/marvin-js/commit/ad42859))
+* don't list users twice in `intra online` ([#9](https://github.com/ItsWendell/marvin-js/issues/9)) ([d7fbba4](https://github.com/ItsWendell/marvin-js/commit/d7fbba4))
+* identify scopes for slack oauth2 history ([5f6a826](https://github.com/ItsWendell/marvin-js/commit/5f6a826))
+* individual channel protection rights ([464eb68](https://github.com/ItsWendell/marvin-js/commit/464eb68))
+* lint errors in intra42 commands file ([f7279cf](https://github.com/ItsWendell/marvin-js/commit/f7279cf))
+* passport slack not properly working in some cases ([5a7bd29](https://github.com/ItsWendell/marvin-js/commit/5a7bd29))
+* passport slack not properly working in some cases ([6f12d1c](https://github.com/ItsWendell/marvin-js/commit/6f12d1c))
+* remove console log debugging and change history command ([b23a80f](https://github.com/ItsWendell/marvin-js/commit/b23a80f))
+* slack history oauth issues for staging ([e1c7ecc](https://github.com/ItsWendell/marvin-js/commit/e1c7ecc))
+* temp disable npm audit for tar issue ([1b93c53](https://github.com/ItsWendell/marvin-js/commit/1b93c53))
+
+
+### Code refactors
+
+* add identity basic to scope for slack ([350f975](https://github.com/ItsWendell/marvin-js/commit/350f975))
+* change scopes for 42 stategy passport ([f2e0428](https://github.com/ItsWendell/marvin-js/commit/f2e0428))
+* remove debug console logs for slack history debugging ([3f0f751](https://github.com/ItsWendell/marvin-js/commit/3f0f751))
+* remove stats testing command, disable dashboard ([18f9cde](https://github.com/ItsWendell/marvin-js/commit/18f9cde))
+* remove unused debug console and improve server async await ([833bfbd](https://github.com/ItsWendell/marvin-js/commit/833bfbd))
+
+
+### New features
+
+* implement coalition updates on intervals ([c1adb91](https://github.com/ItsWendell/marvin-js/commit/c1adb91))
+* initial dashboard with intra42 oauth and public chat history ([e914163](https://github.com/ItsWendell/marvin-js/commit/e914163))
+
+
+### Other chores
+
+* add debugging to functions auth next ([a11fd34](https://github.com/ItsWendell/marvin-js/commit/a11fd34))
+* add error catching in initialProps slack history ([2c60a1a](https://github.com/ItsWendell/marvin-js/commit/2c60a1a))
+* fix lint errors, remove unused assets ([e39b91c](https://github.com/ItsWendell/marvin-js/commit/e39b91c))
+* fix npm packages security issues ([0581f8d](https://github.com/ItsWendell/marvin-js/commit/0581f8d))
+* implement proper empty states for some commands ([e9dc882](https://github.com/ItsWendell/marvin-js/commit/e9dc882))
+* improvements on interface and design slack history features ([3f80932](https://github.com/ItsWendell/marvin-js/commit/3f80932))
+* initial coalition history updates leads ([0f7ab0d](https://github.com/ItsWendell/marvin-js/commit/0f7ab0d))
+* initial slack oauth passport protection ([b1dc4cf](https://github.com/ItsWendell/marvin-js/commit/b1dc4cf))
+* minor code cleanup in history page ([f250a01](https://github.com/ItsWendell/marvin-js/commit/f250a01))
+* set node engine to 11.13 in package json ([980a171](https://github.com/ItsWendell/marvin-js/commit/980a171))
+* test slack profile output on staging environment ([2a1e99b](https://github.com/ItsWendell/marvin-js/commit/2a1e99b))
+* update package json for slack history ([bf8c49c](https://github.com/ItsWendell/marvin-js/commit/bf8c49c))
+
 ## [1.1.1](https://github.com/ItsWendell/marvin-js/compare/1.1.0...1.1.1) (2019-02-24)
 
 
