@@ -63,10 +63,10 @@
     "yargs": "^12.0.5"
   },
   "devDependencies": {
-    "@commitlint/cli": "^7.5.2",
-    "@commitlint/config-conventional": "^7.5.0",
-    "@peakfijn/config-commitlint": "^1.0.0-rc.3",
-    "@peakfijn/config-release": "^1.0.0-rc.3",
+    "@commitlint/cli": "^7.6.0",
+    "@commitlint/config-conventional": "^7.6.0",
+    "@peakfijn/config-commitlint": "^1.0.1",
+    "@peakfijn/config-release": "^1.0.1",
     "babel-eslint": "^9.0.0",
     "babel-plugin-styled-components": "^1.10.0",
     "cz-conventional-changelog": "^2.1.0",
@@ -81,7 +81,7 @@
     "eslint-plugin-react": "^7.12.4",
     "nodemon": "^1.18.10",
     "prettier": "^1.16.4",
-    "semantic-release": "^15.13.3"
+    "semantic-release": "^15.13.12"
   },
   "babel": {
     "presets": [
