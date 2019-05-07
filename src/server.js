@@ -61,11 +61,21 @@ async function start() {
   // app.use('/static', express.static(path.join(__dirname, '/dasbboard/.next/static')));
 
   // Next JS route handling
+  /* Temporary Disabled
   app.get('*', (req, res) => {
     req.models = models;
     req.slackWeb = web;
     const nextRequestHandler = dashboard.getRequestHandler();
     return nextRequestHandler(req, res);
+  });
+  */
+
+  /**
+   * Return our nextJS dashboard pages.
+   */
+  app.get('*', (req, res) => {
+    res.statusCode = 403;
+    res.end();
   });
 
   /**

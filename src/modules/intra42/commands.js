@@ -12,9 +12,6 @@ export function register() {
       .command('coalitions', 'Coalition commands of the 42 network.', {}, ({ message }) => {
         sendCoalitionStats(message.channel);
       })
-      .command('coalition-stats', 'Manual coalition update checker. (temporary)', {}, () => {
-        fetchCoalitionStats(true);
-      })
       .command(
         'hours <username>',
         'Return accurate checked in hours of an user this week.',
@@ -129,7 +126,7 @@ export function register() {
           .getAll(`/campus/${process.env.INTRA42_CAMPUS_ID}/locations`, {
             filter: {
               active: true,
-              primary: true,
+              primary: true
             },
             per_page: 100
           })
