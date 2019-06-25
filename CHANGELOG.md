@@ -1,3 +1,16 @@
+## [1.2.1](https://github.com/ItsWendell/marvin-js/compare/1.2.0...1.2.1) (2019-06-25)
+
+
+### Bug fixes
+
+* lint issues with the new package updates ([5ddc39a](https://github.com/ItsWendell/marvin-js/commit/5ddc39a))
+
+
+### Other chores
+
+* disable jobs for intra temporary ([9708849](https://github.com/ItsWendell/marvin-js/commit/9708849))
+* fix vulnerabilities in package json file ([cdd0d85](https://github.com/ItsWendell/marvin-js/commit/cdd0d85))
+
 # [1.2.0](https://github.com/ItsWendell/marvin-js/compare/1.1.1...1.2.0) (2019-05-07)
 
 
