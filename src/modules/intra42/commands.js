@@ -1,6 +1,7 @@
 import moment from 'moment';
 import commands from '../../providers/commands';
-import { client, sendCoalitionStats, fetchCoalitionStats } from './intra42';
+// eslint-disable-next-line
+import { client, sendCoalitionStats } from './intra42';
 import { rtm } from '../../slack';
 import { chunk } from '../../providers/helpers';
 

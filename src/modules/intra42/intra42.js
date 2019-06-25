@@ -1,10 +1,11 @@
-import moment from 'moment';
-import { rtm, web, getGeneralChannel } from '../../slack';
+// eslint-disable-next-line
+import { rtm, getGeneralChannel } from '../../slack';
 
 import Intra42Client from './client';
 import { CoalitionHistory } from '../../database/models';
 
 import * as jobs from './jobs';
+// eslint-disable-next-line
 import * as commands from './commands';
 
 export const coalitionInterval = 15;
@@ -87,9 +88,7 @@ export async function sendCoalitionUpdates(result, manual) {
     const channel = await getGeneralChannel();
     const pointsDiff = topNow[0].score - topNow[1].score;
     rtm.sendMessage(
-      `*${topNow[0].name}* is now leading, they just beat *${
-        topNow[1].name
-      }* by ${pointsDiff} points! Enjoy your *4.2% Bonus XP* while it lasts!`,
+      `*${topNow[0].name}* is now leading, they just beat *${topNow[1].name}* by ${pointsDiff} points! Enjoy your *4.2% Bonus XP* while it lasts!`,
       channel.id
     );
 

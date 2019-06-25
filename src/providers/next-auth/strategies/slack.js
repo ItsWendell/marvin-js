@@ -1,6 +1,6 @@
 import { Strategy as SlackStrategy } from 'passport-slack';
 
-export default (process.env.SLACK_CLIENT_ID && process.env.SLACK_CLIENT_SECRET
+export default process.env.SLACK_CLIENT_ID && process.env.SLACK_CLIENT_SECRET
   ? {
       providerName: 'slack',
       providerOptions: {
@@ -21,4 +21,4 @@ export default (process.env.SLACK_CLIENT_ID && process.env.SLACK_CLIENT_SECRET
         };
       }
     }
-  : {});
+  : {};

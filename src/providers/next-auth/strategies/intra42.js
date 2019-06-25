@@ -1,6 +1,6 @@
 import { Strategy as FortyTwoStrategy } from 'passport-42';
 
-export default (process.env.INTRA42_CLIENT_ID && process.env.INTRA42_CLIENT_SECRET
+export default process.env.INTRA42_CLIENT_ID && process.env.INTRA42_CLIENT_SECRET
   ? {
       providerName: 'intra42',
       providerOptions: {
@@ -31,4 +31,4 @@ export default (process.env.INTRA42_CLIENT_ID && process.env.INTRA42_CLIENT_SECR
         };
       }
     }
-  : {});
+  : {};
