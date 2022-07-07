@@ -41,7 +41,7 @@
     "express-session": "^1.16.2",
     "grommet": "^2.7.1",
     "less": "^3.9.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "mongodb": "^3.2.7",
     "mongoose": "^5.6.1",
     "next": "^7.0.3",
