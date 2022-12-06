@@ -52,7 +52,7 @@
     "passport-42": "^1.2.5",
     "passport-slack": "git+https://github.com/ToneDen/passport-slack.git",
     "polished": "^3.4.1",
-    "qs": "^6.7.0",
+    "qs": "^6.7.3",
     "raven": "^2.6.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
