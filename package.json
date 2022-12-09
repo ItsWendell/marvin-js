@@ -37,7 +37,7 @@
     "babel-preset-airbnb": "^3.3.2",
     "connect-mongo": "^2.0.3",
     "dotenv": "^6.2.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-session": "^1.16.2",
     "grommet": "^2.7.1",
     "less": "^3.9.0",
